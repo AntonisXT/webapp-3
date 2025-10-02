@@ -10,7 +10,4 @@ const PaintingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-PaintingSchema.index({ subcategory: 1, createdAt: -1 });
-PaintingSchema.index({ title: 'text', description: 'text' });
-
 module.exports = mongoose.model('Painting', PaintingSchema);

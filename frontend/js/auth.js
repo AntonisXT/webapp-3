@@ -1,5 +1,7 @@
 // auth.js
 
+const API_URL = "";
+
 // -- Helpers: decode/validate JWT on the client --
 function parseJwt(token){
     try{
@@ -22,7 +24,7 @@ function isTokenExpired(token){
 // Είσοδος χρήστη
 async function login(username, password) {
     try {
-        const response = await fetch(`/auth/login`, { credentials: 'include', 
+        const response = await fetch('/auth/login', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -38,8 +40,8 @@ async function login(username, password) {
         const data = await response.json();
         // Αποθήκευση του JWT στο localStorage
         localStorage.setItem("token", data.token);
-        /alert("Επιτυχής σύνδεση!");
-        window.location.href = "index.html"; / Ανακατεύθυνση στην κύρια σελίδα
+        //alert("Επιτυχής σύνδεση!");
+        window.location.href = "index.html"; // Ανακατεύθυνση στην κύρια σελίδα
     } catch (error) {
         console.error("Σφάλμα σύνδεσης:", error.message);
         alert(error.message);
@@ -62,18 +64,22 @@ function getToken() {
 // Αποσύνδεση χρήστη
 function logout() {
     localStorage.removeItem("token");
-    /alert("Έχετε αποσυνδεθεί!");
+    //alert("Έχετε αποσυνδεθεί!");
 }
 
 async function fetchWithAuth(url, options = {}) {
-    // token-based check removed; using HTTP-only cookie
-
+    const token = getToken();
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
     const isFormData = options && options.body instanceof FormData;
     const headers = {
       ...(options.headers || {}),
+      'Authorization': `Bearer ${token}`,
       ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     };
-    const response = await fetch(url, { credentials: 'include', ...options,
+    const response = await fetch(url, {
+      ...options,
       headers,
     });
     if (!response.ok) {

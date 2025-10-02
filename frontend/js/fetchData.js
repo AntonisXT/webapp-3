@@ -1,8 +1,9 @@
+const API_URL = "";
 import { fetchWithAuth } from './auth.js';
 
 export async function fetchExhibitions() {
   try {
-    const response = await fetch(`/api/exhibitions`);
+    const response = await fetch('/api/exhibitions');
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -80,7 +81,7 @@ export async function deleteExhibition(id) {
 // Σύνδεσμοι
 export async function fetchLinks() {
   try {
-    const response = await fetch(`/api/links`);
+    const response = await fetch('/api/links');
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -134,7 +135,7 @@ export async function deleteLink(id) {
 
 // --- New API helpers for Categories/Subcategories/Biography/Paintings ---
 export async function fetchCategories() {
-  const res = await fetch(`/api/categories`);
+  const res = await fetch('/api/categories');
   if (!res.ok) throw new Error('Failed to fetch categories');
   return await res.json();
 }
@@ -146,7 +147,7 @@ export async function seedDefaultCategories() {
 }
 
 export async function fetchSubcategories(catId) {
-  const res = await fetch(`/api/categories/${catId}/subcategories`);
+  const res = await fetch('/api/categories/${catId}/subcategories');
   if (!res.ok) throw new Error('Failed to fetch subcategories');
   return await res.json();
 }
@@ -178,7 +179,7 @@ export async function deleteSubcategory(subId) {
 }
 
 export async function getBiography(subId) {
-  const res = await fetch(`/api/biography/${subId}`);
+  const res = await fetch('/api/biography/${subId}');
   if (!res.ok) throw new Error('Failed to fetch biography');
   return await res.json();
 }
@@ -194,7 +195,7 @@ export async function saveBiography(subId, contentHtml) {
 }
 
 export async function listPaintings(subId) {
-  const res = await fetch(`/api/paintings/${subId}`);
+  const res = await fetch('/api/paintings/${subId}');
   if (!res.ok) throw new Error('Failed to fetch paintings');
   return await res.json();
 }

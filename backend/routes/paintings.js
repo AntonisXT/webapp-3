@@ -3,26 +3,14 @@ const router = express.Router();
 const multer = require('multer');
 const Painting = require('../models/painting');
 const auth = require('../middleware/auth');
-const { z, validator } = require('../middleware/validate');
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 }, fileFilter: (_req, file, cb) => cb(null, /^image\/(png|jpe?g|webp)$/.test(file.mimetype)) }); // 10MB per file
+const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB per file
 
 // List by subcategory
 router.get('/:subcategoryId', async (req, res) => {
   try {
-    const page = req.query.page ? Math.max(1, parseInt(req.query.page)) : null;
-    const limit = req.query.limit ? Math.min(50, Math.max(1, parseInt(req.query.limit))) : null;
-    const baseQuery = Painting.find({ subcategory: req.params.subcategoryId }).sort({ createdAt: -1 });
-    let items, total;
-    if (page && limit) {
-      [items, total] = await Promise.all([
-        baseQuery.skip((page-1)*limit).limit(limit),
-        Painting.countDocuments({ subcategory: req.params.subcategoryId })
-      ]);
-    } else {
-      items = await baseQuery;
-    }
+    const items = await Painting.find({ subcategory: req.params.subcategoryId }).sort({ createdAt: -1 });
     // convert to base64 for frontend
     const payload = items.map(p => ({
       _id: p._id,
@@ -33,7 +21,7 @@ router.get('/:subcategoryId', async (req, res) => {
       createdAt: p.createdAt,
       dataUrl: `data:${p.mimeType};base64,${p.imageData.toString('base64')}`
     }));
-    if (page && limit) { return res.json({ page, limit, total, pages: Math.ceil(total/limit), items: payload }); } return res.json(payload);
+    res.json(payload);
   } catch (e) {
     res.status(500).json({ msg: e.message });
   }

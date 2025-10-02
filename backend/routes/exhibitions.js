@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const Exhibition = require('../models/exhibition');
 const auth = require('../middleware/auth');
-const { z, validator } = require('../middleware/validate');
 
 // List (optionally filter by subcategory)
 router.get('/', async (req, res) => {
@@ -18,7 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 // Create
-router.post('/', auth, validator(z.object({ title: z.string().min(1).max(200), url: z.string().url().optional(), location: z.string().optional(), date: z.string().optional(), subcategory: z.string().min(1) })), async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
     const { title, location, date, subcategory } = req.body;
     if (!title || !subcategory) return res.status(400).json({ msg: 'title και subcategory είναι υποχρεωτικά' });
@@ -30,7 +29,7 @@ router.post('/', auth, validator(z.object({ title: z.string().min(1).max(200), u
 });
 
 // Update
-router.put('/:id', auth, validator(z.object({ title: z.string().min(1).max(200).optional(), url: z.string().url().optional(), location: z.string().optional(), date: z.string().optional(), subcategory: z.string().min(1).optional() })), async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   try {
     const doc = await Exhibition.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(doc);

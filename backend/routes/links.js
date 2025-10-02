@@ -1,8 +1,8 @@
+
 const express = require('express');
 const router = express.Router();
 const LinkItem = require('../models/linkItem');
 const auth = require('../middleware/auth');
-const { z, validator } = require('../middleware/validate');
 
 // List (optionally filter by subcategory)
 router.get('/', async (req, res) => {
@@ -17,54 +17,26 @@ router.get('/', async (req, res) => {
 });
 
 // Create
-router.post(
-  '/',
-  auth,
-  validator(
-    z
-      .object({
-        title: z.string().max(200).optional(),
-        url: z.string().url(),
-        subcategory: z.string().min(1),
-      })
-      .passthrough()
-  ),
-  async (req, res) => {
-    try {
-      const { title, url, subcategory } = req.body;
-      if (!url || !subcategory) {
-        return res.status(400).json({ msg: 'url και subcategory είναι υποχρεωτικά' });
-      }
-      const doc = await LinkItem.create({ title, url, subcategory });
-      res.json(doc);
-    } catch (e) {
-      res.status(400).json({ msg: e.message });
-    }
+router.post('/', auth, async (req, res) => {
+  try {
+    const { title, url, subcategory } = req.body;
+    if (!url || !subcategory) return res.status(400).json({ msg: 'url και subcategory είναι υποχρεωτικά' });
+    const doc = await LinkItem.create({ title, url, subcategory });
+    res.json(doc);
+  } catch (e) {
+    res.status(400).json({ msg: e.message });
   }
-);
+});
 
 // Update
-router.put(
-  '/:id',
-  auth,
-  validator(
-    z
-      .object({
-        title: z.string().max(200).optional(),
-        url: z.string().url().optional(),
-        subcategory: z.string().min(1).optional(),
-      })
-      .passthrough()
-  ),
-  async (req, res) => {
-    try {
-      const doc = await LinkItem.findByIdAndUpdate(req.params.id, req.body, { new: true });
-      res.json(doc);
-    } catch (e) {
-      res.status(400).json({ msg: e.message });
-    }
+router.put('/:id', auth, async (req, res) => {
+  try {
+    const doc = await LinkItem.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(doc);
+  } catch (e) {
+    res.status(400).json({ msg: e.message });
   }
-);
+});
 
 // Delete
 router.delete('/:id', auth, async (req, res) => {

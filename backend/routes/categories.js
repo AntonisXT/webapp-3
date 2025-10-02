@@ -3,10 +3,7 @@ const router = express.Router();
 const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
 const auth = require('../middleware/auth');
-const { z, validator } = require('../middleware/validate');
 
-
-const catNameSchema = z.object({ name: z.string().min(1).max(64) });
 
 // --- helper: Greek -> Latin slug ---
 function slugifyElToKey(str='') {
@@ -82,7 +79,7 @@ router.get('/', async (_req, res) => {
 });
 
 // (Μπορείς να αφαιρέσεις αυτό το endpoint αν δεν θες να δημιουργούνται άλλες κατηγορίες)
-router.post('/', auth, validator(catNameSchema), async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
     const cat = await Category.create(req.body);
     res.json(cat);
@@ -119,7 +116,7 @@ router.post('/:catId/subcategories', auth, async (req, res) => {
     res.status(400).json({ msg: e.message });
   }
 });
-router.put('/subcategories/:id', auth, validator(z.object({ name: z.string().min(1).max(64) })), async (req, res) => {
+router.put('/subcategories/:id', auth, async (req, res) => {
   try {
     const sub = await Subcategory.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(sub);

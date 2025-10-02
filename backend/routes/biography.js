@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Biography = require('../models/biography');
 const auth = require('../middleware/auth');
-const { z, validator } = require('../middleware/validate');
 
 // Get biography content by subcategory id
 router.get('/:subcategoryId', async (req, res) => {
@@ -15,7 +14,7 @@ router.get('/:subcategoryId', async (req, res) => {
 });
 
 // Upsert biography content
-router.post('/:subcategoryId', auth, validator(z.object({ contentHtml: z.string().min(1) })), async (req, res) => {
+router.post('/:subcategoryId', auth, async (req, res) => {
   try {
     const { contentHtml } = req.body;
     const updated = await Biography.findOneAndUpdate(
