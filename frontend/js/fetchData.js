@@ -179,13 +179,13 @@ export async function deleteSubcategory(subId) {
 }
 
 export async function getBiography(subId) {
-  const res = await fetch('/api/biography/${subId}');
+  const res = await fetch(`/api/biography/${encodeURIComponent(subId)}`);
   if (!res.ok) throw new Error('Failed to fetch biography');
   return await res.json();
 }
 
 export async function saveBiography(subId, contentHtml) {
-  const res = await fetchWithAuth(`/api/biography/${subId}`, {
+  const res = await fetchWithAuth(`/api/biography/${encodeURIComponent(subId)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contentHtml })
@@ -195,7 +195,7 @@ export async function saveBiography(subId, contentHtml) {
 }
 
 export async function listPaintings(subId) {
-  const res = await fetch('/api/paintings/${subId}');
+  const res = await fetch(`/api/paintings/${encodeURIComponent(subId)}`);
   if (!res.ok) throw new Error('Failed to fetch paintings');
   return await res.json();
 }
@@ -203,7 +203,7 @@ export async function listPaintings(subId) {
 export async function uploadPaintings(subId, files, descriptions=[]) {
   const form = new FormData();
   for (let i=0;i<files.length;i++){ form.append('images', files[i]); form.append('descriptions', descriptions[i]||''); }
-  const res = await fetchWithAuth(`/api/paintings/${subId}`, {
+  const res = await fetchWithAuth(`/api/paintings/${encodeURIComponent(subId)}`, {
     method: 'POST',
     body: form
   });
