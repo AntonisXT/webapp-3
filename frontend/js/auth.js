@@ -15,11 +15,11 @@ export async function login(username, password){
 }
 
 export async function logout(){
-  await fetch('/auth/logout', { method:'POST', credentials:'include' });
+  await fetch('/auth/logout', {  method:'POST', credentials:'include' , cache: 'no-store' });
 }
 
 export async function me(){
-  const res = await fetch('/auth/me', { credentials: 'include' });
+  const res = await fetch('/auth/me', {  credentials: 'include' , cache: 'no-store' });
   if(!res.ok) return null;
   return await res.json();
 }

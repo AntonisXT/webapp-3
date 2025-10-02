@@ -6,12 +6,16 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
 const router = express.Router();
+
+// Prevent caching on all auth responses
+router.use((req, res, next) => { res.set('Cache-Control','no-store'); next(); });
 const JWT_SECRET = process.env.JWT_SECRET;
 const COOKIE_NAME = 'sid';
 
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body || {};
+        res.set('Cache-Control','no-store');
+const { username, password } = req.body || {};
     if (!username || !password) {
       return res.status(400).json({ msg: 'Missing credentials' });
     }
@@ -45,7 +49,8 @@ router.post('/login', async (req, res) => {
 
 router.get('/me', (req, res) => {
   try {
-    const token = req.cookies && req.cookies[COOKIE_NAME];
+        res.set('Cache-Control','no-store');
+const token = req.cookies && req.cookies[COOKIE_NAME];
     if (!token) return res.status(401).json({ msg: 'Unauthorized' });
     const payload = jwt.verify(token, JWT_SECRET);
     res.json({ ok: true, user: { id: payload.sub, username: payload.usr, role: payload.role } });
