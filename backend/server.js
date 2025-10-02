@@ -3,7 +3,7 @@ require('dotenv').config();
 const connectDB = require('./config/db');
 const cors = require('cors');
 
-const authRoutes = require("./routes/authRoutes");
+const { router: authRoutes, auth: authMiddleware } = require('./routes/authRoutes');
 const categoriesRoutes = require('./routes/categories');
 const biographyRoutes = require('./routes/biography');
 const paintingsRoutes = require('./routes/paintings');
