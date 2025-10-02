@@ -1,21 +1,22 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const auth = (req, res, next) => {
+const COOKIE_NAME = 'sid';
+
+module.exports = function auth(req, res, next) {
   const raw = req.header('Authorization') || '';
-  const token = raw.startsWith('Bearer ') ? raw.slice(7) : raw;
-
-  if (!token) {
-    return res.status(401).json({ msg: 'No token, authorization denied' });
+  let token = raw.startsWith('Bearer ') ? raw.slice(7) : (raw || '');
+  if (!token && req.cookies) {
+    token = req.cookies[COOKIE_NAME];
   }
-
+  if (!token) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    next();
+    return next();
   } catch (err) {
-    return res.status(401).json({ msg: 'Token is not valid' });
+    return res.status(401).json({ msg: 'Unauthorized' });
   }
 };
-
-module.exports = auth;
