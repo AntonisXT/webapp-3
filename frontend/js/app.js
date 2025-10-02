@@ -30,8 +30,8 @@ function showQuickCreateSubModal(parentCatId, onCreated) {
   box.style.boxShadow = '0 10px 35px rgba(0,0,0,0.25)';
   box.style.padding = '20px';
 
-  box.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+  box.innerHTML =  DOMPurify.sanitize(`
+    <div style="display:flex, { USE_PROFILES: { html: true } });align-items:center;justify-content:space-between;margin-bottom:8px">
       <h3 style="margin:0;font-size:18px">Νέα υποκατηγορία</h3>
       <button id="qsClose" class="secondary" style="border:none;background:transparent;font-size:18px;cursor:pointer">✕</button>
     </div>
@@ -80,19 +80,19 @@ document.addEventListener('DOMContentLoaded', () => {
   manageCategoriesBtn.href = '#';
   manageCategoriesBtn.id = 'manageCategories';
   manageCategoriesBtn.className = 'management-option';
-  manageCategoriesBtn.innerHTML = '<div class="management-card"><h3>Κατηγορίες</h3></div>';
+  manageCategoriesBtn.innerHTML =  DOMPurify.sanitize('<div class="management-card"><h3>Κατηγορίες</h3></div>', { USE_PROFILES: { html: true } });
 
   const manageBiographyBtn = document.createElement('a');
   manageBiographyBtn.href = '#';
   manageBiographyBtn.id = 'manageBiography';
   manageBiographyBtn.className = 'management-option';
-  manageBiographyBtn.innerHTML = '<div class="management-card"><h3>Βιογραφία</h3></div>';
+  manageBiographyBtn.innerHTML =  DOMPurify.sanitize('<div class="management-card"><h3>Βιογραφία</h3></div>', { USE_PROFILES: { html: true } });
 
   const managePaintingsBtn = document.createElement('a');
   managePaintingsBtn.href = '#';
   managePaintingsBtn.id = 'managePaintings';
   managePaintingsBtn.className = 'management-option';
-  managePaintingsBtn.innerHTML = '<div class="management-card"><h3>Πίνακες</h3></div>';
+  managePaintingsBtn.innerHTML =  DOMPurify.sanitize('<div class="management-card"><h3>Πίνακες</h3></div>', { USE_PROFILES: { html: true } });
 
   // Prepend new options before existing ones
   const optionsContainer = document.querySelector('.management-options-container');
@@ -161,26 +161,26 @@ document.addEventListener('DOMContentLoaded', () => {
       // Ενημέρωση του Main
       switch (section) {
         case 'biography':
-          mainContent.innerHTML = '<p>Επιλέξτε κατηγορία βιογραφίας απο το πλευρικό μενού.</p>';
+          mainContent.innerHTML =  DOMPurify.sanitize('<p>Επιλέξτε κατηγορία βιογραφίας απο το πλευρικό μενού.</p>', { USE_PROFILES: { html: true } });
           break;
         case 'paintings':
-          mainContent.innerHTML = '<p>Επιλέξτε κατηγορία πίνακα από το πλευρικό μενού.</p>';
+          mainContent.innerHTML =  DOMPurify.sanitize('<p>Επιλέξτε κατηγορία πίνακα από το πλευρικό μενού.</p>', { USE_PROFILES: { html: true } });
           break;
         case 'exhibitions':
-          mainContent.innerHTML = '<p>Επιλέξτε κατηγορία εκθέσεων από το πλευρικό μενού.</p>';
+          mainContent.innerHTML =  DOMPurify.sanitize('<p>Επιλέξτε κατηγορία εκθέσεων από το πλευρικό μενού.</p>', { USE_PROFILES: { html: true } });
           break;
         case 'links':
-          mainContent.innerHTML = '<p>Επιλέξτε κατηγορία συνδέσμων από το πλευρικό μενού.</p>';
+          mainContent.innerHTML =  DOMPurify.sanitize('<p>Επιλέξτε κατηγορία συνδέσμων από το πλευρικό μενού.</p>', { USE_PROFILES: { html: true } });
           break;
         case 'management':
           if (isLoggedIn()) {
-            mainContent.innerHTML = '<p>Επιλέξτε ενέργεια από το μενού διαχείρισης.</p>';
+            mainContent.innerHTML =  DOMPurify.sanitize('<p>Επιλέξτε ενέργεια από το μενού διαχείρισης.</p>', { USE_PROFILES: { html: true } });
           } else {
-            mainContent.innerHTML = '<p>Παρακαλώ συνδεθείτε για πρόσβαση στη διαχείριση.</p>';
+            mainContent.innerHTML =  DOMPurify.sanitize('<p>Παρακαλώ συνδεθείτε για πρόσβαση στη διαχείριση.</p>', { USE_PROFILES: { html: true } });
           }
           break;
         default:
-          mainContent.innerHTML = '<p>Καλώς ήρθατε στην εφαρμογή.</p>';
+          mainContent.innerHTML =  DOMPurify.sanitize('<p>Καλώς ήρθατε στην εφαρμογή.</p>', { USE_PROFILES: { html: true } });
       }
     });
   });
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Ενημέρωση περιεχομένου με βάση την κατηγορία
       if (section === 'biography') {
-        mainContent.innerHTML = biographyContent[category] || '<p>Το περιεχόμενο δεν είναι διαθέσιμο.</p>';
+        mainContent.innerHTML =  DOMPurify.sanitize(biographyContent[category] || '<p>Το περιεχόμενο δεν είναι διαθέσιμο.</p>', { USE_PROFILES: { html: true } });
       } else if (section === 'paintings') {
         let content = '';
         switch (category) {
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>`;
             break;
         }
-        mainContent.innerHTML = content;
+        mainContent.innerHTML =  DOMPurify.sanitize(content, { USE_PROFILES: { html: true } });
       }
     });
   });
@@ -272,7 +272,7 @@ manageLinks.addEventListener('click', async (e) => { e.preventDefault(); await r
 async function loadExhibitions() {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/exhibitions`, {
+    const response = await fetch(`/api/exhibitions`,  credentials: 'include',
       headers: {
         'Authorization': token
       }
@@ -282,7 +282,7 @@ async function loadExhibitions() {
     }
     const exhibitions = await response.json();
     const list = document.getElementById('exhibitionsList');
-    list.innerHTML = exhibitions.map(ex => `
+    list.innerHTML =  DOMPurify.sanitize(exhibitions.map(ex => `
       <div class="item">
         <p>${ex.title} - ${ex.date} (${ex.location}) - ${ex.category}</p>
         <div class="manage-buttons">
@@ -294,11 +294,11 @@ async function loadExhibitions() {
           </button>
         </div>
       </div>
-    `).join('');
+    `).join(''), { USE_PROFILES: { html: true } });
   } catch (error) {
     console.error('Error loading exhibitions:', error);
     document.getElementById('exhibitionsList').innerHTML = 
-      '<p>Σφάλμα κατά τη φόρτωση των εκθέσεων. Παρακαλώ προσπαθήστε ξανά.</p>';
+       DOMPurify.sanitize('<p>Σφάλμα κατά τη φόρτωση των εκθέσεων. Παρακαλώ προσπαθήστε ξανά.</p>', { USE_PROFILES: { html: true } });
   }
 }
 
@@ -307,7 +307,7 @@ async function loadLinks() {
     const response = await fetch(`/api/links`);
     const links = await response.json();
     const list = document.getElementById('linksList');
-    list.innerHTML = links.map(link => `
+    list.innerHTML =  DOMPurify.sanitize(links.map(link => `
       <div class="item">
         <p><a href="${link.url}" target="_blank">${link.description}</a> (${link.category})</p>
         <div class="manage-buttons">
@@ -319,11 +319,11 @@ async function loadLinks() {
           </button>
         </div>
       </div>
-    `).join('');
+    `).join(''), { USE_PROFILES: { html: true } });
   } catch (error) {
     console.error('Error loading links:', error);
     document.getElementById('linksList').innerHTML = 
-      '<p>Σφάλμα κατά τη φόρτωση των συνδέσμων. Παρακαλώ προσπαθήστε ξανά.</p>';
+       DOMPurify.sanitize('<p>Σφάλμα κατά τη φόρτωση των συνδέσμων. Παρακαλώ προσπαθήστε ξανά.</p>', { USE_PROFILES: { html: true } });
   }
 }
 
@@ -374,7 +374,7 @@ async function loadExhibitionsByCategory(category) {
     const filteredExhibitions = exhibitions.filter(ex => ex.category === category);
     
     const mainContent = document.getElementById('content');
-    mainContent.innerHTML = `
+    mainContent.innerHTML =  DOMPurify.sanitize(`
       <h2>${category}</h2>
       <div id="exhibitionsList">
         ${filteredExhibitions.map(ex => `
@@ -385,11 +385,11 @@ async function loadExhibitionsByCategory(category) {
           </div>
         `).join('')}
       </div>
-    `;
+    `, { USE_PROFILES: { html: true } });
   } catch (error) {
     console.error('Error:', error);
     document.getElementById('content').innerHTML = 
-      '<p>Σφάλμα κατά τη φόρτωση των εκθέσεων.</p>';
+       DOMPurify.sanitize('<p>Σφάλμα κατά τη φόρτωση των εκθέσεων.</p>', { USE_PROFILES: { html: true } });
   }
 }
 
@@ -400,7 +400,7 @@ async function loadLinksByCategory(category) {
     const filteredLinks = links.filter(link => link.category === category);
     
     const mainContent = document.getElementById('content');
-    mainContent.innerHTML = `
+    mainContent.innerHTML =  DOMPurify.sanitize(`
       <h2>${category}</h2>
       <div id="linksList">
         ${filteredLinks.map(link => `
@@ -410,11 +410,11 @@ async function loadLinksByCategory(category) {
           </div>
         `).join('')}
       </div>
-    `;
+    `, { USE_PROFILES: { html: true } });
   } catch (error) {
     console.error('Error:', error);
     document.getElementById('content').innerHTML = 
-      '<p>Σφάλμα κατά τη φόρτωση των συνδέσμων.</p>';
+       DOMPurify.sanitize('<p>Σφάλμα κατά τη φόρτωση των συνδέσμων.</p>', { USE_PROFILES: { html: true } });
   }
 }
 
@@ -476,40 +476,40 @@ async function loadAsideMenus() {
     if (bioList) {
       if (catBio) {
         const subs = await fetchSubcategories(catBio._id);
-        bioList.innerHTML = subs.length
+        bioList.innerHTML =  DOMPurify.sanitize(subs.length
           ? subs.map(s => `<li><a href="#" data-category="${s.key}">${s.name}</a></li>`).join('')
-          : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>';
-      } else { bioList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Βιογραφία</em></li>'; }
+          : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>', { USE_PROFILES: { html: true } });
+      } else { bioList.innerHTML =  DOMPurify.sanitize('<li><em>Δεν υπάρχει κατηγορία Βιογραφία</em></li>', { USE_PROFILES: { html: true } }); }
     }
 
     const paintList = document.getElementById('paintList');
     if (paintList) {
       if (catPaint) {
         const subs = await fetchSubcategories(catPaint._id);
-        paintList.innerHTML = subs.length
+        paintList.innerHTML =  DOMPurify.sanitize(subs.length
           ? subs.map(s => `<li><a href="#" data-category="${s.key}">${s.name}</a></li>`).join('')
-          : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>';
-      } else { paintList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Πίνακες</em></li>'; }
+          : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>', { USE_PROFILES: { html: true } });
+      } else { paintList.innerHTML =  DOMPurify.sanitize('<li><em>Δεν υπάρχει κατηγορία Πίνακες</em></li>', { USE_PROFILES: { html: true } }); }
     }
 
     const exhList = document.getElementById('exhList');
     if (exhList) {
       if (catExh) {
         const subs = await fetchSubcategories(catExh._id);
-        exhList.innerHTML = subs.length
+        exhList.innerHTML =  DOMPurify.sanitize(subs.length
           ? subs.map(s => `<li><a href="#" data-category="${s.key||s.name}">${s.name}</a></li>`).join('')
-          : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>';
-      } else { exhList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Εκθέσεις</em></li>'; }
+          : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>', { USE_PROFILES: { html: true } });
+      } else { exhList.innerHTML =  DOMPurify.sanitize('<li><em>Δεν υπάρχει κατηγορία Εκθέσεις</em></li>', { USE_PROFILES: { html: true } }); }
     }
 
     const linkList = document.getElementById('linkList');
     if (linkList) {
       if (catLink) {
         const subs = await fetchSubcategories(catLink._id);
-        linkList.innerHTML = subs.length
+        linkList.innerHTML =  DOMPurify.sanitize(subs.length
           ? subs.map(s => `<li><a href="#" data-category="${s.key||s.name}">${s.name}</a></li>`).join('')
-          : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>';
-      } else { linkList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Συνδέσμοι</em></li>'; }
+          : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>', { USE_PROFILES: { html: true } });
+      } else { linkList.innerHTML =  DOMPurify.sanitize('<li><em>Δεν υπάρχει κατηγορία Συνδέσμοι</em></li>', { USE_PROFILES: { html: true } }); }
     }
     bindSidebarClicksOnce();
   } catch (err) {
@@ -533,14 +533,14 @@ async function resolveSubcategory(catKey, token) {
 async function renderBiographyPublic(token) {
   const sub = await resolveSubcategory('biography', token);
   const content = document.getElementById('content');
-  if (!sub) { content.innerHTML = '<div class="card"><p>Δεν βρέθηκε η ενότητα.</p></div>'; return; }
+  if (!sub) { content.innerHTML =  DOMPurify.sanitize('<div class="card"><p>Δεν βρέθηκε η ενότητα.</p></div>', { USE_PROFILES: { html: true } }); return; }
   const data = await getBiography(sub._id);
 
   function renderFromPlain(rawText){
-    const norm = String(rawText || '').replace(/\r\n/g, '\n');              
+    const norm = String(rawText || '').replace(/\r\n/g, '\n');                / normalize CRLF
     // Escape minimal HTML if it's plain text
     const looksLikeHtml = /<\s*(p|br|ul|ol|li|strong|em|h\d)\b/i.test(norm);
-    if (looksLikeHtml) return norm;                                            
+    if (looksLikeHtml) return norm;                                              / already HTML, trust it
     const esc = norm.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
     // Keep empty lines: split on 2+ newlines -> paragraphs; single newline -> <br>
     const paragraphs = esc.split(/\n{2,}/).map(part => part.replace(/\n/g,'<br>'));
@@ -556,18 +556,18 @@ async function renderBiographyPublic(token) {
     inner = renderFromPlain(data.content || data.text);
   }
 
-  content.innerHTML = inner
+  content.innerHTML =  DOMPurify.sanitize(inner
     ? `<div class="card bio-card"><div class="headline"><h2>${sub.name}</h2></div><div class="prose">${inner}</div></div>`
-    : `<div class="card bio-card"><div class="headline"><h2>${sub.name}</h2></div><p>Δεν υπάρχει περιεχόμενο ακόμη.</p></div>`;
+    : `<div class="card bio-card"><div class="headline"><h2>${sub.name}</h2></div><p>Δεν υπάρχει περιεχόμενο ακόμη.</p></div>`, { USE_PROFILES: { html: true } });
 }
 async function renderPaintingsPublic(token) {
   const sub = await resolveSubcategory('paintings', token);
   const content = document.getElementById('content');
-  if (!sub) { content.innerHTML = '<div class="card"><p>Δεν βρέθηκε η ενότητα.</p></div>'; return; }
+  if (!sub) { content.innerHTML =  DOMPurify.sanitize('<div class="card"><p>Δεν βρέθηκε η ενότητα.</p></div>', { USE_PROFILES: { html: true } }); return; }
   const items = await listPaintings(sub._id);
-  content.innerHTML = `<div class="card"><div class="headline"><h2>${sub.name}</h2></div><div id="gallery" class="gallery"></div></div>`;
+  content.innerHTML =  DOMPurify.sanitize(`<div class="card"><div class="headline"><h2>${sub.name}</h2></div><div id="gallery" class="gallery"></div></div>`, { USE_PROFILES: { html: true } });
   const gal = document.getElementById('gallery');
-  gal.innerHTML = items.length
+  gal.innerHTML =  DOMPurify.sanitize(items.length
     ? items.map(i => `
       <figure>
         <div class="media">
@@ -577,7 +577,7 @@ async function renderPaintingsPublic(token) {
           ${i.description||i.title||""}
         </figcaption>
       </figure>`).join('')
-    : '<p>Δεν υπάρχουν εικόνες ακόμη.</p>';
+    : '<p>Δεν υπάρχουν εικόνες ακόμη.</p>', { USE_PROFILES: { html: true } });
 }
 
 
@@ -591,9 +591,9 @@ async function renderExhibitionsPublic(token) {
   } else if (token) {
     filtered = list.filter(x => (x.category === token) || (x.subcategoryName === token));
   }
-  content.innerHTML = `<div class="card"><div class="headline"><h2>${sub ? sub.name : 'Εκθέσεις'}</h2></div><ul class="exhibitions-list"></ul></div>`;
+  content.innerHTML =  DOMPurify.sanitize(`<div class="card"><div class="headline"><h2>${sub ? sub.name : 'Εκθέσεις'}</h2></div><ul class="exhibitions-list"></ul></div>`, { USE_PROFILES: { html: true } });
   const ul = document.querySelector('.exhibitions-list');
-  if (!filtered.length) { ul.innerHTML = '<li>Δεν υπάρχουν εγγραφές ακόμη.</li>'; return; }
+  if (!filtered.length) { ul.innerHTML =  DOMPurify.sanitize('<li>Δεν υπάρχουν εγγραφές ακόμη.</li>', { USE_PROFILES: { html: true } }); return; }
   const parts = [];
   filtered.forEach(e => {
     const title = (e.title || '').replace(/`/g,'´');
@@ -615,7 +615,7 @@ async function renderExhibitionsPublic(token) {
       </li>`
     );
   });
-  ul.innerHTML = parts.join('');
+  ul.innerHTML =  DOMPurify.sanitize(parts.join(''), { USE_PROFILES: { html: true } });
 }
 
 async function renderLinksPublic(token) {
@@ -628,9 +628,9 @@ async function renderLinksPublic(token) {
   } else if (token) {
     filtered = list.filter(x => (x.category === token) || (x.subcategoryName === token));
   }
-  content.innerHTML = `<div class="card"><div class="headline"><h2>${sub ? sub.name : 'Σύνδεσμοι'}</h2></div><ul class="links-list"></ul></div>`;
+  content.innerHTML =  DOMPurify.sanitize(`<div class="card"><div class="headline"><h2>${sub ? sub.name : 'Σύνδεσμοι'}</h2></div><ul class="links-list"></ul></div>`, { USE_PROFILES: { html: true } });
   const ul = document.querySelector('.links-list');
-  if (!filtered.length) { ul.innerHTML = '<li>Δεν υπάρχουν σύνδεσμοι ακόμη.</li>'; return; }
+  if (!filtered.length) { ul.innerHTML =  DOMPurify.sanitize('<li>Δεν υπάρχουν σύνδεσμοι ακόμη.</li>', { USE_PROFILES: { html: true } }); return; }
   const parts = [];
   filtered.forEach(l => {
     const url = l.url || '#';
@@ -646,7 +646,7 @@ async function renderLinksPublic(token) {
        </li>`
     );
   });
-  ul.innerHTML = parts.join('');
+  ul.innerHTML =  DOMPurify.sanitize(parts.join(''), { USE_PROFILES: { html: true } });
 }
 function bindSidebarClicksOnce() {
   if (window.__sidebarBound) return;
@@ -691,7 +691,7 @@ function bindSidebarClicksOnce() {
 
 async function renderCategoriesAdmin() {
   const content = document.getElementById('content');
-  content.innerHTML = `<div class="card">
+  content.innerHTML =  DOMPurify.sanitize(`<div class="card">
     <div class="headline"><h2>Διαχείριση Υποκατηγοριών</h2></div>
 
     <div class="admin-form">
@@ -718,14 +718,14 @@ async function renderCategoriesAdmin() {
         <tbody id="subsTable"><tr><td colspan="2">Φόρτωση...</td></tr></tbody>
       </table>
     </div>
-  </div>`;
+  </div>`, { USE_PROFILES: { html: true } });
 
   const ALL = await fetchCategories();
   const ALLOWED_KEYS = ['biography','paintings','exhibitions','links'];
   const titleMap = { biography:'Βιογραφία', paintings:'Πίνακες', exhibitions:'Εκθέσεις', links:'Σύνδεσμοι' };
   const cats = ALL.filter(c => ALLOWED_KEYS.includes(c.key));
   const catSel = document.getElementById('catSel');
-  catSel.innerHTML = cats.map(c => `<option value="${c._id}">${titleMap[c.key]||c.name}</option>`).join('');
+  catSel.innerHTML =  DOMPurify.sanitize(cats.map(c => `<option value="${c._id}">${titleMap[c.key]||c.name}</option>`).join(''), { USE_PROFILES: { html: true } });
 
   const subsTable = document.getElementById('subsTable');
   const nameInput = document.getElementById('newSubName');
@@ -734,7 +734,7 @@ async function renderCategoriesAdmin() {
 
   async function loadSubs() {
     const subs = await fetchSubcategories(catSel.value);
-    subsTable.innerHTML = subs.length ? subs.map(s => `
+    subsTable.innerHTML =  DOMPurify.sanitize(subs.length ? subs.map(s => `
       <tr data-id="${s._id}">
         <td>${s.name}</td>
         <td class="actions-cell">
@@ -742,7 +742,7 @@ async function renderCategoriesAdmin() {
           <span class="spacer"></span>
           <button class="danger delete">Διαγραφή</button>
         </td>
-      </tr>`).join('') : `<tr><td colspan="2">Δεν υπάρχουν υποκατηγορίες.</td></tr>`;
+      </tr>`).join('') : `<tr><td colspan="2">Δεν υπάρχουν υποκατηγορίες.</td></tr>`, { USE_PROFILES: { html: true } });
   }
   catSel.addEventListener('change', async ()=>{ editId=null; nameInput.value=''; await loadSubs(); await loadAsideMenus(); });
   await loadSubs();
@@ -775,7 +775,7 @@ async function renderCategoriesAdmin() {
 
 async function renderBiographyAdmin() {
   const content = document.getElementById('content');
-  content.innerHTML = `<div class="card">
+  content.innerHTML =  DOMPurify.sanitize(`<div class="card">
     <div class="headline"><h2>Διαχείριση Βιογραφίας</h2></div>
 
     <div class="admin-form">
@@ -792,7 +792,7 @@ async function renderBiographyAdmin() {
         <label>Κείμενο</label>
         <textarea id="bioEditor" class="control" placeholder="Γράψε εδώ το κείμενο (HTML επιτρέπεται)"></textarea>
       </div>
-      <div class="form-row wide" style="display:flex;justify-content:flex-end;">
+      <div class="form-row wide" style="display:flex, { USE_PROFILES: { html: true } });justify-content:flex-end;">
         <button id="bioSaveBtn" class="button">Αποθήκευση</button>
       </div>
     </div>
@@ -801,9 +801,9 @@ async function renderBiographyAdmin() {
   const cats = await fetchCategories();
   const cat = cats.find(c => c.key === 'biography');
   const subSel = document.getElementById('bioSubSel');
-  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Βιογραφίας</option>`; return; }
+  if (!cat) { subSel.innerHTML =  DOMPurify.sanitize(`<option>Δεν υπάρχει κατηγορία Βιογραφίας</option>`, { USE_PROFILES: { html: true } }); return; }
   const subs = await fetchSubcategories(cat._id);
-  subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
+  subSel.innerHTML =  DOMPurify.sanitize(subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`, { USE_PROFILES: { html: true } });
 
   
   
@@ -811,7 +811,7 @@ async function renderBiographyAdmin() {
     if (!subs.length) {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
-          subSel.innerHTML = `<option value="${created._id}">${created.name}</option>`;
+          subSel.innerHTML =  DOMPurify.sanitize(`<option value="${created._id}">${created.name}</option>`, { USE_PROFILES: { html: true } });
           subSel.value = created._id;
           const ev = new Event('change'); subSel.dispatchEvent(ev); if (typeof loadBio==='function') await loadBio();
         }
@@ -839,7 +839,7 @@ async function renderBiographyAdmin() {
 
 async function renderPaintingsAdmin() {
   const content = document.getElementById('content');
-  content.innerHTML = `<div class="card">
+  content.innerHTML =  DOMPurify.sanitize(`<div class="card">
     <div class="headline"><h2>Διαχείριση Πινάκων</h2></div>
 
     <div class="admin-form">
@@ -867,21 +867,21 @@ async function renderPaintingsAdmin() {
         <div class="gallery" id="paintGallery"></div>
       </div>
     </div>
-  </div>`;
+  </div>`, { USE_PROFILES: { html: true } });
 
   const cats = await fetchCategories();
   const cat = cats.find(c => c.key === 'paintings');
   const subSel = document.getElementById('paintSubSel');
-  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Πίνακες</option>`; return; }
+  if (!cat) { subSel.innerHTML =  DOMPurify.sanitize(`<option>Δεν υπάρχει κατηγορία Πίνακες</option>`, { USE_PROFILES: { html: true } }); return; }
   const subs = await fetchSubcategories(cat._id);
-  subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
+  subSel.innerHTML =  DOMPurify.sanitize(subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`, { USE_PROFILES: { html: true } });
 
   
     // If empty, prompt to create a subcategory now
     if (!subs.length) {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
-          subSel.innerHTML = `<option value="${created._id}">${created.name}</option>`;
+          subSel.innerHTML =  DOMPurify.sanitize(`<option value="${created._id}">${created.name}</option>`, { USE_PROFILES: { html: true } });
           subSel.value = created._id;
           const ev = new Event('change'); subSel.dispatchEvent(ev); if (typeof loadGallery==='function') await loadGallery();
         }
@@ -894,21 +894,21 @@ async function renderPaintingsAdmin() {
   const descRow = document.getElementById('paintDescRow');
   function renderDescInputs(files){
     if (descRow) descRow.style.display = (files && files.length) ? '' : 'none';
-    if(!files || !files.length){ descList.innerHTML = ''; return; }
+    if(!files || !files.length){ descList.innerHTML =  DOMPurify.sanitize('', { USE_PROFILES: { html: true } }); return; }
     const rows = [];
     for(let i=0;i<files.length;i++){
       const f = files[i];
       rows.push(`<div class="desc-row"><label class="desc-label">${f.name}</label><textarea class="control paint-desc" data-idx="${i}" placeholder="Περιγραφή (προαιρετικό)"></textarea></div>`);
     }
-    descList.innerHTML = rows.join('');
+    descList.innerHTML =  DOMPurify.sanitize(rows.join(''), { USE_PROFILES: { html: true } });
   }
   if (filesEl) filesEl.addEventListener('change', ()=>{ renderDescInputs(filesEl.files); });
 
   function setPaintEnabled(on){ if(filesEl) filesEl.disabled = !on; if(uploadBtn) uploadBtn.disabled = !on; }
   setPaintEnabled(!!subSel.value);
-  async function loadGallery(){ if (!subSel || !subSel.value) { gal.innerHTML = '<p>Δεν υπάρχουν υποκατηγορίες.</p>'; return; }
+  async function loadGallery(){ if (!subSel || !subSel.value) { gal.innerHTML =  DOMPurify.sanitize('<p>Δεν υπάρχουν υποκατηγορίες.</p>', { USE_PROFILES: { html: true } }); return; }
     const items = await listPaintings(subSel.value);
-    gal.innerHTML = items.length ? items.map(i => `
+    gal.innerHTML =  DOMPurify.sanitize(items.length ? items.map(i => `
       <figure data-id="${i._id}">
         <button class="danger del" title="Διαγραφή">Διαγραφή</button>
         <div class="media">
@@ -916,7 +916,7 @@ async function renderPaintingsAdmin() {
         </div>
         <figcaption title="${i.description||i.title||''}">
           ${i.description||i.title||''}
-          <button class="danger del" style="float:right;margin-left:.5rem;">Διαγραφή</button>
+          <button class="danger del" style="float:right, { USE_PROFILES: { html: true } });margin-left:.5rem;">Διαγραφή</button>
         </figcaption>
       </figure>`).join('') : '<p>Δεν υπάρχουν εικόνες.</p>';
   }
@@ -931,7 +931,7 @@ async function renderPaintingsAdmin() {
     const descriptions = descEls.map(el => el.value || '');
     await uploadPaintings(subSel.value, files, descriptions);
     document.getElementById('paintFiles').value = '';
-    const _descListEl = document.getElementById('paintDescList'); if (_descListEl) _descListEl.innerHTML = '';
+    const _descListEl = document.getElementById('paintDescList'); if (_descListEl) _descListEl.innerHTML =  DOMPurify.sanitize('', { USE_PROFILES: { html: true } });
     const _descRowEl = document.getElementById('paintDescRow'); if (_descRowEl) _descRowEl.style.display = 'none';
     await loadGallery();
   });
@@ -949,7 +949,7 @@ async function renderPaintingsAdmin() {
 
 async function renderExhibitionsAdmin() {
   const content = document.getElementById('content');
-  content.innerHTML = `<div class="card">
+  content.innerHTML =  DOMPurify.sanitize(`<div class="card">
     <div class="headline"><h2>Διαχείριση Εκθέσεων</h2></div>
 
     <div class="admin-form">
@@ -998,21 +998,21 @@ async function renderExhibitionsAdmin() {
         </div>
       </div>
     </div>
-  </div>`;
+  </div>`, { USE_PROFILES: { html: true } });
 
   const cats = await fetchCategories();
   const cat = cats.find(c => c.key === 'exhibitions');
   const subSel = document.getElementById('exhSubSel');
-  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Εκθέσεις</option>`; return; }
+  if (!cat) { subSel.innerHTML =  DOMPurify.sanitize(`<option>Δεν υπάρχει κατηγορία Εκθέσεις</option>`, { USE_PROFILES: { html: true } }); return; }
   const subs = await fetchSubcategories(cat._id);
-  subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
+  subSel.innerHTML =  DOMPurify.sanitize(subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`, { USE_PROFILES: { html: true } });
 
   
     // If empty, prompt to create a subcategory now
     if (!subs.length) {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
-          subSel.innerHTML = `<option value="${created._id}">${created.name}</option>`;
+          subSel.innerHTML =  DOMPurify.sanitize(`<option value="${created._id}">${created.name}</option>`, { USE_PROFILES: { html: true } });
           subSel.value = created._id;
           const ev = new Event('change'); subSel.dispatchEvent(ev); if (typeof loadExh==='function') await loadExh();
         }
@@ -1028,12 +1028,12 @@ async function renderExhibitionsAdmin() {
   function setExhEnabled(on){ if(titleEl) titleEl.disabled=!on; if(dateEl) dateEl.disabled=!on; if(locEl) locEl.disabled=!on; if(saveBtn) saveBtn.disabled=!on; }
   setExhEnabled(!!subSel.value);
 
-  async function loadExh(){ if (!subSel || !subSel.value) { tbody.innerHTML = `<tr><td colspan="5">Δεν υπάρχουν υποκατηγορίες.</td></tr>`; return; }
+  async function loadExh(){ if (!subSel || !subSel.value) { tbody.innerHTML =  DOMPurify.sanitize(`<tr><td colspan="5">Δεν υπάρχουν υποκατηγορίες.</td></tr>`, { USE_PROFILES: { html: true } }); return; }
     const all = await fetchExhibitions();
     const subId = subSel.value;
     const list = all.filter(e => (e.subcategory === subId) || (e.subcategoryId === subId));
-    if (!list.length) { tbody.innerHTML = `<tr><td colspan="4">Δεν υπάρχουν εκθέσεις σε αυτή την κατηγορία.</td></tr>`; return; }
-    tbody.innerHTML = list.map(e => `
+    if (!list.length) { tbody.innerHTML =  DOMPurify.sanitize(`<tr><td colspan="4">Δεν υπάρχουν εκθέσεις σε αυτή την κατηγορία.</td></tr>`, { USE_PROFILES: { html: true } }); return; }
+    tbody.innerHTML =  DOMPurify.sanitize(list.map(e => `
       <tr data-id="${e._id}">
         <td>${e.title||''}</td>
         <td>${e.date||''}</td>
@@ -1044,7 +1044,7 @@ async function renderExhibitionsAdmin() {
           <button class="danger delete">Διαγραφή</button>
         </td>
       </tr>
-    `).join('');
+    `).join(''), { USE_PROFILES: { html: true } });
   }
   subSel.addEventListener('change', loadExh);
   await loadExh();
@@ -1080,7 +1080,7 @@ async function renderExhibitionsAdmin() {
 
 async function renderLinksAdmin() {
   const content = document.getElementById('content');
-  content.innerHTML = `<div class="card">
+  content.innerHTML =  DOMPurify.sanitize(`<div class="card">
     <div class="headline"><h2>Διαχείριση Συνδέσμων</h2></div>
 
     <div class="admin-form">
@@ -1124,21 +1124,21 @@ async function renderLinksAdmin() {
         </div>
       </div>
     </div>
-  </div>`;
+  </div>`, { USE_PROFILES: { html: true } });
 
   const cats = await fetchCategories();
   const cat = cats.find(c => c.key === 'links');
   const subSel = document.getElementById('linkSubSel');
-  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Συνδέσμων</option>`; return; }
+  if (!cat) { subSel.innerHTML =  DOMPurify.sanitize(`<option>Δεν υπάρχει κατηγορία Συνδέσμων</option>`, { USE_PROFILES: { html: true } }); return; }
   const subs = await fetchSubcategories(cat._id);
-  subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
+  subSel.innerHTML =  DOMPurify.sanitize(subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`, { USE_PROFILES: { html: true } });
 
   
     // If empty, prompt to create a subcategory now
     if (!subs.length) {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
-          subSel.innerHTML = `<option value="${created._id}">${created.name}</option>`;
+          subSel.innerHTML =  DOMPurify.sanitize(`<option value="${created._id}">${created.name}</option>`, { USE_PROFILES: { html: true } });
           subSel.value = created._id;
           const ev = new Event('change'); subSel.dispatchEvent(ev); if (typeof loadList==='function') await loadList();
         }
@@ -1153,12 +1153,12 @@ async function renderLinksAdmin() {
   function setLinkEnabled(on){ if(titleEl) titleEl.disabled=!on; if(urlEl) urlEl.disabled=!on; if(saveBtn) saveBtn.disabled=!on; }
   setLinkEnabled(!!subSel.value);
 
-  async function loadList(){ if (!subSel || !subSel.value) { tbody.innerHTML = `<tr><td colspan="3">Δεν υπάρχουν υποκατηγορίες.</td></tr>`; return; }
+  async function loadList(){ if (!subSel || !subSel.value) { tbody.innerHTML =  DOMPurify.sanitize(`<tr><td colspan="3">Δεν υπάρχουν υποκατηγορίες.</td></tr>`, { USE_PROFILES: { html: true } }); return; }
     const all = await fetchLinks();
     const subId = subSel.value;
     const list = all.filter(l => (l.subcategory === subId) || (l.subcategoryId === subId));
-    if (!list.length){ tbody.innerHTML = `<tr><td colspan="3">Δεν υπάρχουν σύνδεσμοι σε αυτή την κατηγορία.</td></tr>`; return; }
-    tbody.innerHTML = list.map(l => `
+    if (!list.length){ tbody.innerHTML =  DOMPurify.sanitize(`<tr><td colspan="3">Δεν υπάρχουν σύνδεσμοι σε αυτή την κατηγορία.</td></tr>`, { USE_PROFILES: { html: true } }); return; }
+    tbody.innerHTML =  DOMPurify.sanitize(list.map(l => `
       <tr data-id="${l._id}">
         <td>${l.title || ''}</td>
         <td><a href="${l.url}" target="_blank" rel="noopener">${l.url}</a></td>
@@ -1168,7 +1168,7 @@ async function renderLinksAdmin() {
           <button class="danger delete">Διαγραφή</button>
         </td>
       </tr>
-    `).join('');
+    `).join(''), { USE_PROFILES: { html: true } });
   }
   subSel.addEventListener('change', loadList);
   await loadList();

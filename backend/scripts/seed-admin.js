@@ -1,4 +1,3 @@
-// Χρήση: node scripts/seed-admin.js <username> <password>
 require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');

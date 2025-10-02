@@ -1,24 +1,26 @@
-# El Greco Web App — Final (Cookie Auth, Mongo Users)
+# El Greco Web App — Polished Build
 
-## Quick Start
-### Backend
-1) Δημιούργησε `.env` από το `backend/.env.example` και συμπλήρωσε τιμές.
-2) Εγκατάσταση
-   ```bash
-   cd backend
-   npm install
-   node scripts/seed-admin.js admin ΔΥΝΑΤΟΣ_ΚΩΔΙΚΟΣ
-   npm start
-   ```
+- MongoDB **User model** (όχι admin σε env)
+- **Cookie-based JWT auth** (HTTP-only)
+- **Relative** API calls (Vercel rewrites)
 
-### Frontend (Vercel)
-- Όλες οι κλήσεις είναι **relative** (`/api`, `/auth`) και περνούν από `vercel.json` rewrites.
-- Ανάλογα βάλε το Render URL στο `vercel.json` (`<render-backend>`).
+## Backend Setup
+1) Δημιούργησε `.env` από `.env.example` και γέμισε τα `MONGO_URI`, `JWT_SECRET`, `FRONTEND_ORIGIN` (προαιρετικά).
+2) Εγκατάσταση:
+```bash
+cd backend
+npm install
+```
+3) Αρχικοποίηση admin:
+```bash
+node scripts/seed-admin.js admin ΔΥΝΑΤΟΣ_ΚΩΔΙΚΟΣ
+```
+4) Εκκίνηση:
+```bash
+npm start
+```
 
-## Τι περιλαμβάνει
-- **Mongo User model** + **seed-admin.js**.
-- **Cookie-based auth** (HTTP-only), `POST /auth/login`, `GET /auth/me`, `POST /auth/logout`.
-- **Security**: helmet, rate-limit στο `/auth/login`, mongo-sanitize, CORS με credentials.
-- **DOMPurify** για ασφαλές `innerHTML`.
-- **Healthz** endpoint.
-- 404 & κεντρικός error handler.
+## Frontend
+- Όλες οι κλήσεις είναι **relative** (`/api/...`, `/auth/...`).
+- Τα requests που απαιτούν login στέλνουν `credentials: 'include'`.
+

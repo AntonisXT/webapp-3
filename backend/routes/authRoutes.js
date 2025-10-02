@@ -1,4 +1,4 @@
-// Cookie-based auth με Mongo Users
+// Auth routes using Mongo User model + cookie-based JWT
 const express = require('express');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
@@ -6,20 +6,15 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
 const router = express.Router();
-
-// Prevent caching on all auth responses
-router.use((req, res, next) => { res.set('Cache-Control','no-store'); next(); });
 const JWT_SECRET = process.env.JWT_SECRET;
 const COOKIE_NAME = 'sid';
 
 router.post('/login', async (req, res) => {
   try {
-        res.set('Cache-Control','no-store');
-const { username, password } = req.body || {};
+    const { username, password } = req.body || {};
     if (!username || !password) {
       return res.status(400).json({ msg: 'Missing credentials' });
     }
-
     const user = await User.findOne({ username, isActive: true });
     if (!user) return res.status(401).json({ msg: 'Invalid credentials' });
 
@@ -29,7 +24,13 @@ const { username, password } = req.body || {};
     const payload = { sub: user._id.toString(), role: user.role, usr: user.username };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '20m' });
 
-    res.cookie(COOKIE_NAME, token, { httpOnly: true, secure: true, sameSite: 'none', path: '/', maxAge: 20 * 60 * 1000 });
+    res.cookie(COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 20 * 60 * 1000
+    });
 
     user.lastLoginAt = new Date();
     await user.save();
@@ -41,21 +42,20 @@ const { username, password } = req.body || {};
   }
 });
 
-router.get('/me', (req, res) => {
-  try {
-        res.set('Cache-Control','no-store');
-const token = req.cookies && req.cookies[COOKIE_NAME];
-    if (!token) return res.status(401).json({ msg: 'Unauthorized' });
-    const payload = jwt.verify(token, JWT_SECRET);
-    res.json({ ok: true, user: { id: payload.sub, username: payload.usr, role: payload.role } });
-  } catch {
-    return res.status(401).json({ msg: 'Unauthorized' });
-  }
-});
-
 router.post('/logout', (req, res) => {
-  res.clearCookie(COOKIE_NAME, { httpOnly: true, secure: true, sameSite: 'none', path: '/' });
+  res.clearCookie(COOKIE_NAME, { path: '/' });
   res.json({ ok: true });
 });
 
-module.exports = router;
+function auth(req, res, next) {
+  try {
+    const token = req.cookies && req.cookies[COOKIE_NAME];
+    if (!token) return res.status(401).json({ msg: 'Unauthorized' });
+    req.user = jwt.verify(token, JWT_SECRET);
+    return next();
+  } catch (err) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
+}
+
+module.exports = { router, auth };

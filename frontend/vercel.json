@@ -1,23 +1,6 @@
 {
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://webapp-oowk.onrender.com/api/$1"
-    },
-    {
-      "source": "/auth/(.*)",
-      "destination": "https://webapp-oowk.onrender.com/auth/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/auth/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        }
-      ]
-    }
+    { "source": "/api/:path*", "destination": "https://webapp-oowk.onrender.com/api/:path*" },
+    { "source": "/auth/:path*", "destination": "https://webapp-oowk.onrender.com/auth/:path*" }
   ]
 }
