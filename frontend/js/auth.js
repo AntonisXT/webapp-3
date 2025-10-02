@@ -40,3 +40,10 @@ export async function fetchWithAuth(url, options = {}){
 async function safeJson(res){
   try { return await res.json(); } catch { return null; }
 }
+
+
+export async function assertLoggedOut(){
+  const res = await fetch('/auth/me', { credentials: 'include', cache: 'no-store' });
+  if(res.status === 401) return true;
+  try{ const data = await res.json(); return !(data && data.ok); }catch{ return true; }
+}
