@@ -1,3 +1,17 @@
+function focusFirstInput(container){
+  requestAnimationFrame(()=>{
+    const input = container && container.querySelector('input, textarea, select');
+    if(input){ input.removeAttribute('disabled'); input.focus({preventScroll:false}); }
+  });
+}
+function showToast(msg){
+  const el=document.createElement('div');
+  el.className='toast';
+  el.textContent=msg;
+  Object.assign(el.style,{position:'fixed',bottom:'20px',left:'50%',transform:'translateX(-50%)',padding:'10px 14px',background:'#222',color:'#fff',borderRadius:'8px',zIndex:9999,boxShadow:'0 2px 8px rgba(0,0,0,.2)'});
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2500);
+}
 import { login, isLoggedIn, logout } from './auth.js';
 import {
   fetchExhibitions, fetchLinks,
@@ -31,7 +45,9 @@ function showQuickCreateSubModal(parentCatId, onCreated) {
   box.style.padding = '20px';
 
   box.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <div style="display:flex;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));align-items:center;justify-content:space-between;margin-bottom:8px">
       <h3 style="margin:0;font-size:18px">Νέα υποκατηγορία</h3>
       <button id="qsClose" class="secondary" style="border:none;background:transparent;font-size:18px;cursor:pointer">✕</button>
     </div>
@@ -83,18 +99,24 @@ document.addEventListener('DOMContentLoaded', () => {
   manageCategoriesBtn.id = 'manageCategories';
   manageCategoriesBtn.className = 'management-option';
   manageCategoriesBtn.innerHTML = '<div class="management-card"><h3>Κατηγορίες</h3></div>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   const manageBiographyBtn = document.createElement('a');
   manageBiographyBtn.href = '#';
   manageBiographyBtn.id = 'manageBiography';
   manageBiographyBtn.className = 'management-option';
   manageBiographyBtn.innerHTML = '<div class="management-card"><h3>Βιογραφία</h3></div>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   const managePaintingsBtn = document.createElement('a');
   managePaintingsBtn.href = '#';
   managePaintingsBtn.id = 'managePaintings';
   managePaintingsBtn.className = 'management-option';
   managePaintingsBtn.innerHTML = '<div class="management-card"><h3>Πίνακες</h3></div>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   // Prepend new options before existing ones
   const optionsContainer = document.querySelector('.management-options-container');
@@ -164,25 +186,39 @@ document.addEventListener('DOMContentLoaded', () => {
       switch (section) {
         case 'biography':
           mainContent.innerHTML = '<p>Επιλέξτε κατηγορία βιογραφίας απο το πλευρικό μενού.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           break;
         case 'paintings':
           mainContent.innerHTML = '<p>Επιλέξτε κατηγορία πίνακα από το πλευρικό μενού.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           break;
         case 'exhibitions':
           mainContent.innerHTML = '<p>Επιλέξτε κατηγορία εκθέσεων από το πλευρικό μενού.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           break;
         case 'links':
           mainContent.innerHTML = '<p>Επιλέξτε κατηγορία συνδέσμων από το πλευρικό μενού.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           break;
         case 'management':
           if (isLoggedIn()) {
             mainContent.innerHTML = '<p>Επιλέξτε ενέργεια από το μενού διαχείρισης.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           } else {
             mainContent.innerHTML = '<p>Παρακαλώ συνδεθείτε για πρόσβαση στη διαχείριση.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           }
           break;
         default:
           mainContent.innerHTML = '<p>Καλώς ήρθατε στην εφαρμογή.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
       }
     });
   });
@@ -198,6 +234,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Ενημέρωση περιεχομένου με βάση την κατηγορία
       if (section === 'biography') {
         mainContent.innerHTML = biographyContent[category] || '<p>Το περιεχόμενο δεν είναι διαθέσιμο.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
       } else if (section === 'paintings') {
         let content = '';
         switch (category) {
@@ -234,6 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
         }
         mainContent.innerHTML = content;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
       }
     });
   });
@@ -297,10 +337,14 @@ async function loadExhibitions() {
         </div>
       </div>
     `).join('');
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   } catch (error) {
     console.error('Error loading exhibitions:', error);
     document.getElementById('exhibitionsList').innerHTML = 
       '<p>Σφάλμα κατά τη φόρτωση των εκθέσεων. Παρακαλώ προσπαθήστε ξανά.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   }
 }
 
@@ -322,10 +366,14 @@ async function loadLinks() {
         </div>
       </div>
     `).join('');
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   } catch (error) {
     console.error('Error loading links:', error);
     document.getElementById('linksList').innerHTML = 
       '<p>Σφάλμα κατά τη φόρτωση των συνδέσμων. Παρακαλώ προσπαθήστε ξανά.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   }
 }
 
@@ -388,10 +436,14 @@ async function loadExhibitionsByCategory(category) {
         `).join('')}
       </div>
     `;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   } catch (error) {
     console.error('Error:', error);
     document.getElementById('content').innerHTML = 
       '<p>Σφάλμα κατά τη φόρτωση των εκθέσεων.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   }
 }
 
@@ -413,10 +465,14 @@ async function loadLinksByCategory(category) {
         `).join('')}
       </div>
     `;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   } catch (error) {
     console.error('Error:', error);
     document.getElementById('content').innerHTML = 
       '<p>Σφάλμα κατά τη φόρτωση των συνδέσμων.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   }
 }
 
@@ -481,7 +537,11 @@ async function loadAsideMenus() {
         bioList.innerHTML = subs.length
           ? subs.map(s => `<li><a href="#" data-category="${s.key}">${s.name}</a></li>`).join('')
           : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>';
-      } else { bioList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Βιογραφία</em></li>'; }
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
+      } else { bioList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Βιογραφία</em></li>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); }
     }
 
     const paintList = document.getElementById('paintList');
@@ -491,7 +551,11 @@ async function loadAsideMenus() {
         paintList.innerHTML = subs.length
           ? subs.map(s => `<li><a href="#" data-category="${s.key}">${s.name}</a></li>`).join('')
           : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>';
-      } else { paintList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Πίνακες</em></li>'; }
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
+      } else { paintList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Πίνακες</em></li>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); }
     }
 
     const exhList = document.getElementById('exhList');
@@ -501,7 +565,11 @@ async function loadAsideMenus() {
         exhList.innerHTML = subs.length
           ? subs.map(s => `<li><a href="#" data-category="${s.key||s.name}">${s.name}</a></li>`).join('')
           : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>';
-      } else { exhList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Εκθέσεις</em></li>'; }
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
+      } else { exhList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Εκθέσεις</em></li>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); }
     }
 
     const linkList = document.getElementById('linkList');
@@ -511,7 +579,11 @@ async function loadAsideMenus() {
         linkList.innerHTML = subs.length
           ? subs.map(s => `<li><a href="#" data-category="${s.key||s.name}">${s.name}</a></li>`).join('')
           : '<li><em>Δεν υπάρχουν υποκατηγορίες</em></li>';
-      } else { linkList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Συνδέσμοι</em></li>'; }
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
+      } else { linkList.innerHTML = '<li><em>Δεν υπάρχει κατηγορία Συνδέσμοι</em></li>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); }
     }
     bindSidebarClicksOnce();
   } catch (err) {
@@ -535,7 +607,9 @@ async function resolveSubcategory(catKey, token) {
 async function renderBiographyPublic(token) {
   const sub = await resolveSubcategory('biography', token);
   const content = document.getElementById('content');
-  if (!sub) { content.innerHTML = '<div class="card"><p>Δεν βρέθηκε η ενότητα.</p></div>'; return; }
+  if (!sub) { content.innerHTML = '<div class="card"><p>Δεν βρέθηκε η ενότητα.</p></div>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
   const data = await getBiography(sub._id);
 
   function renderFromPlain(rawText){
@@ -561,13 +635,19 @@ async function renderBiographyPublic(token) {
   content.innerHTML = inner
     ? `<div class="card bio-card"><div class="headline"><h2>${sub.name}</h2></div><div class="prose">${inner}</div></div>`
     : `<div class="card bio-card"><div class="headline"><h2>${sub.name}</h2></div><p>Δεν υπάρχει περιεχόμενο ακόμη.</p></div>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 }
 async function renderPaintingsPublic(token) {
   const sub = await resolveSubcategory('paintings', token);
   const content = document.getElementById('content');
-  if (!sub) { content.innerHTML = '<div class="card"><p>Δεν βρέθηκε η ενότητα.</p></div>'; return; }
+  if (!sub) { content.innerHTML = '<div class="card"><p>Δεν βρέθηκε η ενότητα.</p></div>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
   const items = await listPaintings(sub._id);
   content.innerHTML = `<div class="card"><div class="headline"><h2>${sub.name}</h2></div><div id="gallery" class="gallery"></div></div>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   const gal = document.getElementById('gallery');
   gal.innerHTML = items.length
     ? items.map(i => `
@@ -580,6 +660,8 @@ async function renderPaintingsPublic(token) {
         </figcaption>
       </figure>`).join('')
     : '<p>Δεν υπάρχουν εικόνες ακόμη.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 }
 
 
@@ -594,8 +676,12 @@ async function renderExhibitionsPublic(token) {
     filtered = list.filter(x => (x.category === token) || (x.subcategoryName === token));
   }
   content.innerHTML = `<div class="card"><div class="headline"><h2>${sub ? sub.name : 'Εκθέσεις'}</h2></div><ul class="exhibitions-list"></ul></div>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   const ul = document.querySelector('.exhibitions-list');
-  if (!filtered.length) { ul.innerHTML = '<li>Δεν υπάρχουν εγγραφές ακόμη.</li>'; return; }
+  if (!filtered.length) { ul.innerHTML = '<li>Δεν υπάρχουν εγγραφές ακόμη.</li>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
   const parts = [];
   filtered.forEach(e => {
     const title = (e.title || '').replace(/`/g,'´');
@@ -618,6 +704,8 @@ async function renderExhibitionsPublic(token) {
     );
   });
   ul.innerHTML = parts.join('');
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 }
 
 async function renderLinksPublic(token) {
@@ -631,8 +719,12 @@ async function renderLinksPublic(token) {
     filtered = list.filter(x => (x.category === token) || (x.subcategoryName === token));
   }
   content.innerHTML = `<div class="card"><div class="headline"><h2>${sub ? sub.name : 'Σύνδεσμοι'}</h2></div><ul class="links-list"></ul></div>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   const ul = document.querySelector('.links-list');
-  if (!filtered.length) { ul.innerHTML = '<li>Δεν υπάρχουν σύνδεσμοι ακόμη.</li>'; return; }
+  if (!filtered.length) { ul.innerHTML = '<li>Δεν υπάρχουν σύνδεσμοι ακόμη.</li>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
   const parts = [];
   filtered.forEach(l => {
     const url = l.url || '#';
@@ -649,6 +741,8 @@ async function renderLinksPublic(token) {
     );
   });
   ul.innerHTML = parts.join('');
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 }
 function bindSidebarClicksOnce() {
   if (window.__sidebarBound) return;
@@ -721,6 +815,8 @@ async function renderCategoriesAdmin() {
       </table>
     </div>
   </div>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   const ALL = await fetchCategories();
   const ALLOWED_KEYS = ['biography','paintings','exhibitions','links'];
@@ -728,6 +824,8 @@ async function renderCategoriesAdmin() {
   const cats = ALL.filter(c => ALLOWED_KEYS.includes(c.key));
   const catSel = document.getElementById('catSel');
   catSel.innerHTML = cats.map(c => `<option value="${c._id}">${titleMap[c.key]||c.name}</option>`).join('');
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   const subsTable = document.getElementById('subsTable');
   const nameInput = document.getElementById('newSubName');
@@ -745,6 +843,8 @@ async function renderCategoriesAdmin() {
           <button class="danger delete">Διαγραφή</button>
         </td>
       </tr>`).join('') : `<tr><td colspan="2">Δεν υπάρχουν υποκατηγορίες.</td></tr>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   }
   catSel.addEventListener('change', async ()=>{ editId=null; nameInput.value=''; await loadSubs(); await loadAsideMenus(); });
   await loadSubs();
@@ -794,7 +894,9 @@ async function renderBiographyAdmin() {
         <label>Κείμενο</label>
         <textarea id="bioEditor" class="control" placeholder="Γράψε εδώ το κείμενο (HTML επιτρέπεται)"></textarea>
       </div>
-      <div class="form-row wide" style="display:flex;justify-content:flex-end;">
+      <div class="form-row wide" style="display:flex;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));justify-content:flex-end;">
         <button id="bioSaveBtn" class="button">Αποθήκευση</button>
       </div>
     </div>
@@ -803,9 +905,13 @@ async function renderBiographyAdmin() {
   const cats = await fetchCategories();
   const cat = cats.find(c => c.key === 'biography');
   const subSel = document.getElementById('bioSubSel');
-  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Βιογραφίας</option>`; return; }
+  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Βιογραφίας</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
   const subs = await fetchSubcategories(cat._id);
   subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   
   
@@ -814,6 +920,8 @@ async function renderBiographyAdmin() {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
           subSel.innerHTML = `<option value="${created._id}">${created.name}</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           subSel.value = created._id;
           const ev = new Event('change'); subSel.dispatchEvent(ev); if (typeof loadBio==='function') await loadBio();
         }
@@ -870,13 +978,19 @@ async function renderPaintingsAdmin() {
       </div>
     </div>
   </div>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   const cats = await fetchCategories();
   const cat = cats.find(c => c.key === 'paintings');
   const subSel = document.getElementById('paintSubSel');
-  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Πίνακες</option>`; return; }
+  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Πίνακες</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
   const subs = await fetchSubcategories(cat._id);
   subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   
     // If empty, prompt to create a subcategory now
@@ -884,6 +998,8 @@ async function renderPaintingsAdmin() {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
           subSel.innerHTML = `<option value="${created._id}">${created.name}</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           subSel.value = created._id;
           const ev = new Event('change'); subSel.dispatchEvent(ev); if (typeof loadGallery==='function') await loadGallery();
         }
@@ -896,19 +1012,25 @@ async function renderPaintingsAdmin() {
   const descRow = document.getElementById('paintDescRow');
   function renderDescInputs(files){
     if (descRow) descRow.style.display = (files && files.length) ? '' : 'none';
-    if(!files || !files.length){ descList.innerHTML = ''; return; }
+    if(!files || !files.length){ descList.innerHTML = '';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
     const rows = [];
     for(let i=0;i<files.length;i++){
       const f = files[i];
       rows.push(`<div class="desc-row"><label class="desc-label">${f.name}</label><textarea class="control paint-desc" data-idx="${i}" placeholder="Περιγραφή (προαιρετικό)"></textarea></div>`);
     }
     descList.innerHTML = rows.join('');
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   }
   if (filesEl) filesEl.addEventListener('change', ()=>{ renderDescInputs(filesEl.files); });
 
   function setPaintEnabled(on){ if(filesEl) filesEl.disabled = !on; if(uploadBtn) uploadBtn.disabled = !on; }
   setPaintEnabled(!!subSel.value);
-  async function loadGallery(){ if (!subSel || !subSel.value) { gal.innerHTML = '<p>Δεν υπάρχουν υποκατηγορίες.</p>'; return; }
+  async function loadGallery(){ if (!subSel || !subSel.value) { gal.innerHTML = '<p>Δεν υπάρχουν υποκατηγορίες.</p>';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
     const items = await listPaintings(subSel.value);
     gal.innerHTML = items.length ? items.map(i => `
       <figure data-id="${i._id}">
@@ -918,7 +1040,9 @@ async function renderPaintingsAdmin() {
         </div>
         <figcaption title="${i.description||i.title||''}">
           ${i.description||i.title||''}
-          <button class="danger del" style="float:right;margin-left:.5rem;">Διαγραφή</button>
+          <button class="danger del" style="float:right;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));margin-left:.5rem;">Διαγραφή</button>
         </figcaption>
       </figure>`).join('') : '<p>Δεν υπάρχουν εικόνες.</p>';
   }
@@ -934,6 +1058,8 @@ async function renderPaintingsAdmin() {
     await uploadPaintings(subSel.value, files, descriptions);
     document.getElementById('paintFiles').value = '';
     const _descListEl = document.getElementById('paintDescList'); if (_descListEl) _descListEl.innerHTML = '';
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
     const _descRowEl = document.getElementById('paintDescRow'); if (_descRowEl) _descRowEl.style.display = 'none';
     await loadGallery();
   });
@@ -1001,13 +1127,19 @@ async function renderExhibitionsAdmin() {
       </div>
     </div>
   </div>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   const cats = await fetchCategories();
   const cat = cats.find(c => c.key === 'exhibitions');
   const subSel = document.getElementById('exhSubSel');
-  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Εκθέσεις</option>`; return; }
+  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Εκθέσεις</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
   const subs = await fetchSubcategories(cat._id);
   subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   
     // If empty, prompt to create a subcategory now
@@ -1015,6 +1147,8 @@ async function renderExhibitionsAdmin() {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
           subSel.innerHTML = `<option value="${created._id}">${created.name}</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           subSel.value = created._id;
           const ev = new Event('change'); subSel.dispatchEvent(ev); if (typeof loadExh==='function') await loadExh();
         }
@@ -1030,11 +1164,15 @@ async function renderExhibitionsAdmin() {
   function setExhEnabled(on){ if(titleEl) titleEl.disabled=!on; if(dateEl) dateEl.disabled=!on; if(locEl) locEl.disabled=!on; if(saveBtn) saveBtn.disabled=!on; }
   setExhEnabled(!!subSel.value);
 
-  async function loadExh(){ if (!subSel || !subSel.value) { tbody.innerHTML = `<tr><td colspan="5">Δεν υπάρχουν υποκατηγορίες.</td></tr>`; return; }
+  async function loadExh(){ if (!subSel || !subSel.value) { tbody.innerHTML = `<tr><td colspan="5">Δεν υπάρχουν υποκατηγορίες.</td></tr>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
     const all = await fetchExhibitions();
     const subId = subSel.value;
     const list = all.filter(e => (e.subcategory === subId) || (e.subcategoryId === subId));
-    if (!list.length) { tbody.innerHTML = `<tr><td colspan="4">Δεν υπάρχουν εκθέσεις σε αυτή την κατηγορία.</td></tr>`; return; }
+    if (!list.length) { tbody.innerHTML = `<tr><td colspan="4">Δεν υπάρχουν εκθέσεις σε αυτή την κατηγορία.</td></tr>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
     tbody.innerHTML = list.map(e => `
       <tr data-id="${e._id}">
         <td>${e.title||''}</td>
@@ -1047,6 +1185,8 @@ async function renderExhibitionsAdmin() {
         </td>
       </tr>
     `).join('');
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   }
   subSel.addEventListener('change', loadExh);
   await loadExh();
@@ -1127,13 +1267,19 @@ async function renderLinksAdmin() {
       </div>
     </div>
   </div>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   const cats = await fetchCategories();
   const cat = cats.find(c => c.key === 'links');
   const subSel = document.getElementById('linkSubSel');
-  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Συνδέσμων</option>`; return; }
+  if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Συνδέσμων</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
   const subs = await fetchSubcategories(cat._id);
   subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
 
   
     // If empty, prompt to create a subcategory now
@@ -1141,6 +1287,8 @@ async function renderLinksAdmin() {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
           subSel.innerHTML = `<option value="${created._id}">${created.name}</option>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
           subSel.value = created._id;
           const ev = new Event('change'); subSel.dispatchEvent(ev); if (typeof loadList==='function') await loadList();
         }
@@ -1155,11 +1303,15 @@ async function renderLinksAdmin() {
   function setLinkEnabled(on){ if(titleEl) titleEl.disabled=!on; if(urlEl) urlEl.disabled=!on; if(saveBtn) saveBtn.disabled=!on; }
   setLinkEnabled(!!subSel.value);
 
-  async function loadList(){ if (!subSel || !subSel.value) { tbody.innerHTML = `<tr><td colspan="3">Δεν υπάρχουν υποκατηγορίες.</td></tr>`; return; }
+  async function loadList(){ if (!subSel || !subSel.value) { tbody.innerHTML = `<tr><td colspan="3">Δεν υπάρχουν υποκατηγορίες.</td></tr>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
     const all = await fetchLinks();
     const subId = subSel.value;
     const list = all.filter(l => (l.subcategory === subId) || (l.subcategoryId === subId));
-    if (!list.length){ tbody.innerHTML = `<tr><td colspan="3">Δεν υπάρχουν σύνδεσμοι σε αυτή την κατηγορία.</td></tr>`; return; }
+    if (!list.length){ tbody.innerHTML = `<tr><td colspan="3">Δεν υπάρχουν σύνδεσμοι σε αυτή την κατηγορία.</td></tr>`;
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form')); return; }
     tbody.innerHTML = list.map(l => `
       <tr data-id="${l._id}">
         <td>${l.title || ''}</td>
@@ -1171,6 +1323,8 @@ async function renderLinksAdmin() {
         </td>
       </tr>
     `).join('');
+// Auto-focus first input in newly inserted form
+focusFirstInput(this instanceof HTMLElement ? this : document.querySelector('.empty-state, .subcategory-form, .new-subcategory-form'));
   }
   subSel.addEventListener('change', loadList);
   await loadList();
