@@ -52,3 +52,5 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.status(err.status || 500).json({ msg: 'Server error' });
 });
+
+app.get('/healthz', (_req,res)=>res.json({ok:true}));

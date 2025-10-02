@@ -1,22 +1,17 @@
-// auth.js — cookie-based auth (no localStorage)
+// auth.js — cookie-based auth (HTTP-only), χωρίς localStorage
 
 export async function login(username, password){
-  try{
-    const res = await fetch('/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ username, password })
-    });
-    if(!res.ok){
-      const e = await safeJson(res);
-      throw new Error(e?.msg || 'Σφάλμα κατά την είσοδο');
-    }
-    return await res.json();
-  }catch(err){
-    console.error('Σφάλμα σύνδεσης:', err.message);
-    throw err;
+  const res = await fetch('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username, password })
+  });
+  if(!res.ok){
+    const e = await safeJson(res);
+    throw new Error(e?.msg || 'Σφάλμα κατά την είσοδο');
   }
+  return await res.json();
 }
 
 export async function logout(){
@@ -29,13 +24,19 @@ export async function me(){
   return await res.json();
 }
 
-// Helper fetch wrapper for protected routes
-export async function fetchWithAuth(url, options={}){
-  const res = await fetch(url, { credentials:'include', ...(options||{}) });
+// Συμβατότητα με παλαιό κώδικα
+export async function isLoggedIn(){
+  const data = await me();
+  return !!(data && data.ok);
+}
+
+// Wrapper για protected κλήσεις: στέλνει πάντα credentials
+export async function fetchWithAuth(url, options = {}){
+  const res = await fetch(url, { credentials:'include', ...(options || {}) });
   return res;
 }
 
-// Utilities
+// Helpers
 async function safeJson(res){
-  try{ return await res.json(); }catch{ return null; }
+  try { return await res.json(); } catch { return null; }
 }

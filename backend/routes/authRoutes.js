@@ -1,4 +1,4 @@
-// Auth routes using Mongo User model + cookie-based JWT
+// Cookie-based auth με Mongo Users
 const express = require('express');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
@@ -15,6 +15,7 @@ router.post('/login', async (req, res) => {
     if (!username || !password) {
       return res.status(400).json({ msg: 'Missing credentials' });
     }
+
     const user = await User.findOne({ username, isActive: true });
     if (!user) return res.status(401).json({ msg: 'Invalid credentials' });
 
@@ -48,7 +49,7 @@ router.get('/me', (req, res) => {
     if (!token) return res.status(401).json({ msg: 'Unauthorized' });
     const payload = jwt.verify(token, JWT_SECRET);
     res.json({ ok: true, user: { id: payload.sub, username: payload.usr, role: payload.role } });
-  } catch (err) {
+  } catch {
     return res.status(401).json({ msg: 'Unauthorized' });
   }
 });
