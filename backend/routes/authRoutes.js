@@ -11,14 +11,6 @@ const router = express.Router();
 router.use((req, res, next) => { res.set('Cache-Control','no-store'); next(); });
 const JWT_SECRET = process.env.JWT_SECRET;
 const COOKIE_NAME = 'sid';
-const COOKIE_OPTS_BASE = {
-  httpOnly: true,
-  secure: true,
-  sameSite: 'lax',
-  path: '/',
-};
-const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN;
-const COOKIE_OPTS = COOKIE_DOMAIN ? { ...COOKIE_OPTS_BASE, domain: COOKIE_DOMAIN } : COOKIE_OPTS_BASE;
 
 router.post('/login', async (req, res) => {
   try {
@@ -37,7 +29,7 @@ const { username, password } = req.body || {};
     const payload = { sub: user._id.toString(), role: user.role, usr: user.username };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '20m' });
 
-    res.cookie(COOKIE_NAME, token, { ...COOKIE_OPTS, maxAge: 20 * 60 * 1000 });
+    res.cookie(COOKIE_NAME, token, { httpOnly: true, secure: true, sameSite: 'none', path: '/', maxAge: 20 * 60 * 1000 });
 
     user.lastLoginAt = new Date();
     await user.save();
@@ -62,7 +54,7 @@ const token = req.cookies && req.cookies[COOKIE_NAME];
 });
 
 router.post('/logout', (req, res) => {
-  res.clearCookie(COOKIE_NAME, COOKIE_OPTS);
+  res.clearCookie(COOKIE_NAME, { httpOnly: true, secure: true, sameSite: 'none', path: '/' });
   res.json({ ok: true });
 });
 

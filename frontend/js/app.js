@@ -537,10 +537,10 @@ async function renderBiographyPublic(token) {
   const data = await getBiography(sub._id);
 
   function renderFromPlain(rawText){
-    const norm = String(rawText || '').replace(/\r\n/g, '\n');               
+    const norm = String(rawText || '').replace(/\r\n/g, '\n');              
     // Escape minimal HTML if it's plain text
     const looksLikeHtml = /<\s*(p|br|ul|ol|li|strong|em|h\d)\b/i.test(norm);
-    if (looksLikeHtml) return norm;                                              
+    if (looksLikeHtml) return norm;                                            
     const esc = norm.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
     // Keep empty lines: split on 2+ newlines -> paragraphs; single newline -> <br>
     const paragraphs = esc.split(/\n{2,}/).map(part => part.replace(/\n/g,'<br>'));
