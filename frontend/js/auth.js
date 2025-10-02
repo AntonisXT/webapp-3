@@ -14,7 +14,7 @@ function parseJwt(token){
 }
 function isTokenExpired(token){
     const payload = parseJwt(token);
-    if(!payload || !payload.exp) return false; / if no exp, assume valid
+    if(!payload || !payload.exp) return false; // if no exp, assume valid
     const nowSec = Math.floor(Date.now()/1000);
     return payload.exp <= nowSec;
 }
@@ -38,8 +38,8 @@ async function login(username, password) {
         const data = await response.json();
         // Αποθήκευση του JWT στο localStorage
         localStorage.setItem("token", data.token);
-        /alert("Επιτυχής σύνδεση!");
-        window.location.href = "index.html"; / Ανακατεύθυνση στην κύρια σελίδα
+        //alert("Επιτυχής σύνδεση!");
+        window.location.href = "index.html"; // Ανακατεύθυνση στην κύρια σελίδα
     } catch (error) {
         console.error("Σφάλμα σύνδεσης:", error.message);
         alert(error.message);
@@ -62,7 +62,7 @@ function getToken() {
 // Αποσύνδεση χρήστη
 function logout() {
     localStorage.removeItem("token");
-    /alert("Έχετε αποσυνδεθεί!");
+    alert("Έχετε αποσυνδεθεί!");
 }
 
 async function fetchWithAuth(url, options = {}) {
