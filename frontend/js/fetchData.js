@@ -147,13 +147,13 @@ export async function seedDefaultCategories() {
 }
 
 export async function fetchSubcategories(catId) {
-  const res = await fetch('/api/categories/${catId}/subcategories');
+  const res = await fetch(`/api/categories/${encodeURIComponent(catId)}/subcategories`);
   if (!res.ok) throw new Error('Failed to fetch subcategories');
   return await res.json();
 }
 
 export async function addSubcategory(catId, payload) {
-  const res = await fetchWithAuth(`/api/categories/${catId}/subcategories`, {
+  const res = await fetchWithAuth(`/api/categories/${encodeURIComponent(catId)}/subcategories`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
