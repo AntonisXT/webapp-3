@@ -140,7 +140,7 @@ export async function fetchCategories() {
 }
 
 export async function seedDefaultCategories() {
-  const res = await fetchWithAuth(`/api/categories/seed-defaults`,  credentials: 'include', method: 'POST' });
+  const res = await fetchWithAuth(`/api/categories/seed-defaults`, { method: 'POST' });
   if (!res.ok) throw new Error('Failed to seed defaults');
   return await res.json();
 }

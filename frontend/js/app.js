@@ -30,17 +30,17 @@ function showQuickCreateSubModal(parentCatId, onCreated) {
   box.style.boxShadow = '0 10px 35px rgba(0,0,0,0.25)';
   box.style.padding = '20px';
 
-  box.innerHTML =  DOMPurify.sanitize(`
-    <div style="display:flex, { USE_PROFILES: { html: true } });align-items:center;justify-content:space-between;margin-bottom:8px">
-      <h3 style="margin:0;font-size:18px">Νέα υποκατηγορία</h3>
-      <button id="qsClose" class="secondary" style="border:none;background:transparent;font-size:18px;cursor:pointer">✕</button>
-    </div>
-    <p style="margin:0 0 12px 0;color:#555">Δεν υπάρχουν υποκατηγορίες. Δημιούργησε μία για να συνεχίσεις.</p>
-    <div style="display:flex;gap:10px">
-      <input id="qsName" class="control" placeholder="Όνομα υποκατηγορίας" style="flex:1"/>
-      <button id="qsCreate" class="button">Δημιουργία</button>
-    </div>
-  `;
+  box.innerHTML = DOMPurify.sanitize(`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <h3 style="margin:0;font-size:18px">Νέα υποκατηγορία</h3>
+    <button id="qsClose" class="secondary" style="border:0;background:transparent;font-size:18px;cursor:pointer">✕</button>
+  </div>
+  <p style="margin:0 0 12px 0;color:#555">Δεν υπάρχουν υποκατηγορίες. Δημιούργησε μία για να συνεχίσεις.</p>
+  <div style="display:flex;gap:10px">
+    <input id="qsName" class="control" placeholder="Όνομα υποκατηγορίας" style="flex:1" />
+    <button id="qsCreate" class="button">Δημιουργία</button>
+  </div>
+`, { USE_PROFILES: { html: true } });
 
   overlay.appendChild(box);
   document.body.appendChild(overlay);

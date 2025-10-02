@@ -14,7 +14,7 @@ function parseJwt(token){
 }
 function isTokenExpired(token){
     const payload = parseJwt(token);
-    if(!payload || !payload.exp) return false; / if no exp, assume valid
+    if(!payload || !payload.exp) return false; // if no exp, assume valid
     const nowSec = Math.floor(Date.now()/1000);
     return payload.exp <= nowSec;
 }
@@ -22,7 +22,7 @@ function isTokenExpired(token){
 // Είσοδος χρήστη
 async function login(username, password) {
     try {
-        const response = await fetch(`/auth/login`,  credentials: 'include',
+        const response = await fetch(`/auth/login`, { credentials: 'include', 
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -66,18 +66,14 @@ function logout() {
 }
 
 async function fetchWithAuth(url, options = {}) {
-    const token = getToken();
-    if (!token) {
-      throw new Error('No authentication token found');
-    }
+    // token-based check removed; using HTTP-only cookie
+
     const isFormData = options && options.body instanceof FormData;
     const headers = {
       ...(options.headers || {}),
-      'Authorization': `Bearer ${token}`,
       ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     };
-    const response = await fetch(url,  credentials: 'include',
-      ...options,
+    const response = await fetch(url, { credentials: 'include', ...options,
       headers,
     });
     if (!response.ok) {
