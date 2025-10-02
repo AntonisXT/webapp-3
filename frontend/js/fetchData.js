@@ -1,9 +1,8 @@
-const API_URL = "http://127.0.0.1:10000";
 import { fetchWithAuth } from './auth.js';
 
 export async function fetchExhibitions() {
   try {
-    const response = await fetch(`${API_URL}/api/exhibitions`);
+    const response = await fetch(`/api/exhibitions`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -17,7 +16,7 @@ export async function fetchExhibitions() {
 
 export async function addExhibition(exhibition) {
   try {
-    const response = await fetchWithAuth(`${API_URL}/api/exhibitions`, {
+    const response = await fetchWithAuth(`/api/exhibitions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,7 +39,7 @@ export async function addExhibition(exhibition) {
 
 export async function updateExhibition(id, exhibition) {
   try {
-    const response = await fetchWithAuth(`${API_URL}/api/exhibitions/${id}`, {
+    const response = await fetchWithAuth(`/api/exhibitions/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +61,7 @@ export async function updateExhibition(id, exhibition) {
 
 export async function deleteExhibition(id) {
   try {
-    const response = await fetchWithAuth(`${API_URL}/api/exhibitions/${id}`, {
+    const response = await fetchWithAuth(`/api/exhibitions/${id}`, {
       method: 'DELETE',
     });
 
@@ -78,10 +77,10 @@ export async function deleteExhibition(id) {
   }
 }
 
-// Σύνδεσμοι
+/ Σύνδεσμοι
 export async function fetchLinks() {
   try {
-    const response = await fetch(`${API_URL}/api/links`);
+    const response = await fetch(`/api/links`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -93,7 +92,7 @@ export async function fetchLinks() {
 }
 
 export async function addLink(link) {
-  const response = await fetchWithAuth(`${API_URL}/api/links`, {
+  const response = await fetchWithAuth(`/api/links`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -104,7 +103,7 @@ export async function addLink(link) {
 }
 
 export async function updateLink(id, link) {
-  const response = await fetchWithAuth(`${API_URL}/api/links/${id}`, {
+  const response = await fetchWithAuth(`/api/links/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -116,7 +115,7 @@ export async function updateLink(id, link) {
 
 export async function deleteLink(id) {
   try {
-    const response = await fetchWithAuth(`${API_URL}/api/links/${id}`, {
+    const response = await fetchWithAuth(`/api/links/${id}`, {
       method: 'DELETE',
     });
     
@@ -133,27 +132,27 @@ export async function deleteLink(id) {
 }
 
 
-// --- New API helpers for Categories/Subcategories/Biography/Paintings ---
+/ --- New API helpers for Categories/Subcategories/Biography/Paintings ---
 export async function fetchCategories() {
-  const res = await fetch(`${API_URL}/api/categories`);
+  const res = await fetch(`/api/categories`);
   if (!res.ok) throw new Error('Failed to fetch categories');
   return await res.json();
 }
 
 export async function seedDefaultCategories() {
-  const res = await fetchWithAuth(`${API_URL}/api/categories/seed-defaults`, { method: 'POST' });
+  const res = await fetchWithAuth(`/api/categories/seed-defaults`, { method: 'POST' });
   if (!res.ok) throw new Error('Failed to seed defaults');
   return await res.json();
 }
 
 export async function fetchSubcategories(catId) {
-  const res = await fetch(`${API_URL}/api/categories/${catId}/subcategories`);
+  const res = await fetch(`/api/categories/${catId}/subcategories`);
   if (!res.ok) throw new Error('Failed to fetch subcategories');
   return await res.json();
 }
 
 export async function addSubcategory(catId, payload) {
-  const res = await fetchWithAuth(`${API_URL}/api/categories/${catId}/subcategories`, {
+  const res = await fetchWithAuth(`/api/categories/${catId}/subcategories`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -163,7 +162,7 @@ export async function addSubcategory(catId, payload) {
 }
 
 export async function updateSubcategory(subId, payload) {
-  const res = await fetchWithAuth(`${API_URL}/api/categories/subcategories/${subId}`, {
+  const res = await fetchWithAuth(`/api/categories/subcategories/${subId}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -173,19 +172,19 @@ export async function updateSubcategory(subId, payload) {
 }
 
 export async function deleteSubcategory(subId) {
-  const res = await fetchWithAuth(`${API_URL}/api/categories/subcategories/${subId}`, { method: 'DELETE' });
+  const res = await fetchWithAuth(`/api/categories/subcategories/${subId}`, { method: 'DELETE' });
   if (!res.ok) throw new Error('Failed to delete subcategory');
   return await res.json();
 }
 
 export async function getBiography(subId) {
-  const res = await fetch(`${API_URL}/api/biography/${subId}`);
+  const res = await fetch(`/api/biography/${subId}`);
   if (!res.ok) throw new Error('Failed to fetch biography');
   return await res.json();
 }
 
 export async function saveBiography(subId, contentHtml) {
-  const res = await fetchWithAuth(`${API_URL}/api/biography/${subId}`, {
+  const res = await fetchWithAuth(`/api/biography/${subId}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contentHtml })
@@ -195,7 +194,7 @@ export async function saveBiography(subId, contentHtml) {
 }
 
 export async function listPaintings(subId) {
-  const res = await fetch(`${API_URL}/api/paintings/${subId}`);
+  const res = await fetch(`/api/paintings/${subId}`);
   if (!res.ok) throw new Error('Failed to fetch paintings');
   return await res.json();
 }
@@ -203,7 +202,7 @@ export async function listPaintings(subId) {
 export async function uploadPaintings(subId, files, descriptions=[]) {
   const form = new FormData();
   for (let i=0;i<files.length;i++){ form.append('images', files[i]); form.append('descriptions', descriptions[i]||''); }
-  const res = await fetchWithAuth(`${API_URL}/api/paintings/${subId}`, {
+  const res = await fetchWithAuth(`/api/paintings/${subId}`, {
     method: 'POST',
     body: form
   });
@@ -212,15 +211,15 @@ export async function uploadPaintings(subId, files, descriptions=[]) {
 }
 
 export async function deletePainting(id) {
-  const res = await fetchWithAuth(`${API_URL}/api/paintings/item/${id}`, { method: 'DELETE' });
+  const res = await fetchWithAuth(`/api/paintings/item/${id}`, { method: 'DELETE' });
   if (!res.ok) throw new Error('Failed to delete painting');
   return await res.json();
 }
 
 
-// --- Category CRUD (no seed) ---
+/ --- Category CRUD (no seed) ---
 export async function addCategory(payload) {
-  const res = await fetchWithAuth(`${API_URL}/api/categories`, {
+  const res = await fetchWithAuth(`/api/categories`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -230,7 +229,7 @@ export async function addCategory(payload) {
 }
 
 export async function updateCategory(id, payload) {
-  const res = await fetchWithAuth(`${API_URL}/api/categories/${id}`, {
+  const res = await fetchWithAuth(`/api/categories/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -240,7 +239,7 @@ export async function updateCategory(id, payload) {
 }
 
 export async function deleteCategory(id) {
-  const res = await fetchWithAuth(`${API_URL}/api/categories/${id}`, {
+  const res = await fetchWithAuth(`/api/categories/${id}`, {
     method: 'DELETE'
   });
   if (!res.ok) throw new Error('Failed to delete category');

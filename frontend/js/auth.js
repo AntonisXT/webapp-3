@@ -1,8 +1,6 @@
-// auth.js
+/ auth.js
 
-const API_URL = "http://127.0.0.1:10000";
-
-// -- Helpers: decode/validate JWT on the client --
+/ -- Helpers: decode/validate JWT on the client --
 function parseJwt(token){
     try{
         const base64Url = token.split('.')[1];
@@ -16,15 +14,15 @@ function parseJwt(token){
 }
 function isTokenExpired(token){
     const payload = parseJwt(token);
-    if(!payload || !payload.exp) return false; // if no exp, assume valid
+    if(!payload || !payload.exp) return false; / if no exp, assume valid
     const nowSec = Math.floor(Date.now()/1000);
     return payload.exp <= nowSec;
 }
 
-// Είσοδος χρήστη
+/ Είσοδος χρήστη
 async function login(username, password) {
     try {
-        const response = await fetch(`${API_URL}/auth/login`, {
+        const response = await fetch(`/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -38,17 +36,17 @@ async function login(username, password) {
         }
 
         const data = await response.json();
-        // Αποθήκευση του JWT στο localStorage
+        / Αποθήκευση του JWT στο localStorage
         localStorage.setItem("token", data.token);
-        //alert("Επιτυχής σύνδεση!");
-        window.location.href = "index.html"; // Ανακατεύθυνση στην κύρια σελίδα
+        /alert("Επιτυχής σύνδεση!");
+        window.location.href = "index.html"; / Ανακατεύθυνση στην κύρια σελίδα
     } catch (error) {
         console.error("Σφάλμα σύνδεσης:", error.message);
         alert(error.message);
     }
 }
 
-// Έλεγχος αν ο χρήστης είναι συνδεδεμένος
+/ Έλεγχος αν ο χρήστης είναι συνδεδεμένος
 function isLoggedIn() {
     const token = localStorage.getItem("token");
     if (!token) return false;
@@ -56,15 +54,15 @@ function isLoggedIn() {
     return true;
 }
 
-// Λήψη του token
+/ Λήψη του token
 function getToken() {
     return localStorage.getItem("token");
 }
 
-// Αποσύνδεση χρήστη
+/ Αποσύνδεση χρήστη
 function logout() {
     localStorage.removeItem("token");
-    //alert("Έχετε αποσυνδεθεί!");
+    /alert("Έχετε αποσυνδεθεί!");
 }
 
 async function fetchWithAuth(url, options = {}) {
@@ -84,7 +82,7 @@ async function fetchWithAuth(url, options = {}) {
     });
     if (!response.ok) {
       if (response.status === 401) { try { logout(); } catch {} }
-      // try to parse JSON error; if not JSON, fall back to text
+      / try to parse JSON error; if not JSON, fall back to text
       let message = 'API request failed';
       try {
         const err = await response.json();
@@ -99,5 +97,5 @@ async function fetchWithAuth(url, options = {}) {
     return response;
 }
 
-// Εξαγωγή λειτουργιών
+/ Εξαγωγή λειτουργιών
 export { login, isLoggedIn, logout, fetchWithAuth };

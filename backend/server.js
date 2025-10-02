@@ -3,13 +3,12 @@ require('dotenv').config();
 const connectDB = require('./config/db');
 const cors = require('cors');
 
-const { router: authRoutes, auth: authMiddleware } = require('./routes/authRoutes');
+const authRoutes = require("./routes/authRoutes");
 const categoriesRoutes = require('./routes/categories');
 const biographyRoutes = require('./routes/biography');
 const paintingsRoutes = require('./routes/paintings');
 
 const app = express();
-const cookieParser = require('cookie-parser');
 
 // DB
 connectDB();
@@ -23,6 +22,7 @@ require('./docs')(app);
 
 // ROUTES
 app.use('/auth', authRoutes);
+app.use('/login', authRoutes);
 
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/biography', biographyRoutes);

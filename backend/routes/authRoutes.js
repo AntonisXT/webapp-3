@@ -1,62 +1,41 @@
-// Auth routes using Mongo User model + cookie-based JWT
-const express = require('express');
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const User = require('../models/User');
-
+const express = require("express");
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs"); // Αν χρησιμοποιούμε hashed passwords
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET;
-const COOKIE_NAME = 'sid';
 
-router.post('/login', async (req, res) => {
-  try {
-    const { username, password } = req.body || {};
-    if (!username || !password) {
-      return res.status(400).json({ msg: 'Missing credentials' });
-    }
-    const user = await User.findOne({ username, isActive: true });
-    if (!user) return res.status(401).json({ msg: 'Invalid credentials' });
+const plainPassword = "project123"; // Επιθυμητό password
+const salt = bcrypt.genSaltSync(10);
+const hashedPassword = bcrypt.hashSync(plainPassword, salt);
 
-    const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) return res.status(401).json({ msg: 'Invalid credentials' });
+// Mock data (π.χ., διαχειριστής)
+const admin = {
+  username: "admin",
+  password: hashedPassword // bcrypt hash για το "admin123"
+};
 
-    const payload = { sub: user._id.toString(), role: user.role, usr: user.username };
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '20m' });
+// POST /auth/login
+router.post("/login", async (req, res) => {
+  const { username, password } = req.body;
 
-    res.cookie(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 20 * 60 * 1000
-    });
-
-    user.lastLoginAt = new Date();
-    await user.save();
-
-    res.json({ ok: true, user: { username: user.username, role: user.role } });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Server error' });
+  // Έλεγχος username
+  if (username !== admin.username) {
+    return res.status(401).json({ message: "Λάθος όνομα χρήστη ή κωδικός." });
   }
+
+  // Έλεγχος password
+  const isPasswordValid = await bcrypt.compare(password, admin.password);
+  if (!isPasswordValid) {
+    return res.status(401).json({ message: "Λάθος όνομα χρήστη ή κωδικός." });
+  }
+
+  // Δημιουργία JWT
+  const token = jwt.sign({ username: admin.username }, process.env.JWT_SECRET, {
+    expiresIn: "1h", // Λήξη σε 1 ώρα
+  });
+
+  res.json({ token });
 });
 
-router.post('/logout', (req, res) => {
-  res.clearCookie(COOKIE_NAME, { path: '/' });
-  res.json({ ok: true });
-});
-
-// Middleware για προστασία routes
-function auth(req, res, next) {
-  try {
-    const token = req.cookies && req.cookies[COOKIE_NAME];
-    if (!token) return res.status(401).json({ msg: 'Unauthorized' });
-    req.user = jwt.verify(token, JWT_SECRET);
-    return next();
-  } catch (err) {
-    return res.status(401).json({ msg: 'Unauthorized' });
-  }
-}
-
-module.exports = { router, auth };
+module.exports = router;
