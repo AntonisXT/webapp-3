@@ -1,6 +1,6 @@
-/ auth.js
+// auth.js
 
-/ -- Helpers: decode/validate JWT on the client --
+// -- Helpers: decode/validate JWT on the client --
 function parseJwt(token){
     try{
         const base64Url = token.split('.')[1];
@@ -19,7 +19,7 @@ function isTokenExpired(token){
     return payload.exp <= nowSec;
 }
 
-/ Είσοδος χρήστη
+// Είσοδος χρήστη
 async function login(username, password) {
     try {
         const response = await fetch(`/auth/login`, {
@@ -36,7 +36,7 @@ async function login(username, password) {
         }
 
         const data = await response.json();
-        / Αποθήκευση του JWT στο localStorage
+        // Αποθήκευση του JWT στο localStorage
         localStorage.setItem("token", data.token);
         /alert("Επιτυχής σύνδεση!");
         window.location.href = "index.html"; / Ανακατεύθυνση στην κύρια σελίδα
@@ -46,7 +46,7 @@ async function login(username, password) {
     }
 }
 
-/ Έλεγχος αν ο χρήστης είναι συνδεδεμένος
+// Έλεγχος αν ο χρήστης είναι συνδεδεμένος
 function isLoggedIn() {
     const token = localStorage.getItem("token");
     if (!token) return false;
@@ -54,12 +54,12 @@ function isLoggedIn() {
     return true;
 }
 
-/ Λήψη του token
+// Λήψη του token
 function getToken() {
     return localStorage.getItem("token");
 }
 
-/ Αποσύνδεση χρήστη
+// Αποσύνδεση χρήστη
 function logout() {
     localStorage.removeItem("token");
     /alert("Έχετε αποσυνδεθεί!");
@@ -82,7 +82,7 @@ async function fetchWithAuth(url, options = {}) {
     });
     if (!response.ok) {
       if (response.status === 401) { try { logout(); } catch {} }
-      / try to parse JSON error; if not JSON, fall back to text
+      // try to parse JSON error; if not JSON, fall back to text
       let message = 'API request failed';
       try {
         const err = await response.json();
@@ -97,5 +97,5 @@ async function fetchWithAuth(url, options = {}) {
     return response;
 }
 
-/ Εξαγωγή λειτουργιών
+// Εξαγωγή λειτουργιών
 export { login, isLoggedIn, logout, fetchWithAuth };

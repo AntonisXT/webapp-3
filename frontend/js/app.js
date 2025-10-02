@@ -10,9 +10,9 @@ import {
 } from './fetchData.js';
 
 
-/ --- Quick modal to create a subcategory when none exists ---
+// --- Quick modal to create a subcategory when none exists ---
 function showQuickCreateSubModal(parentCatId, onCreated) {
-  / Overlay
+  // Overlay
   const overlay = document.createElement('div');
   overlay.id = 'quickSubModal';
   overlay.style.position = 'fixed';
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   managePaintingsBtn.className = 'management-option';
   managePaintingsBtn.innerHTML = '<div class="management-card"><h3>Πίνακες</h3></div>';
 
-  / Prepend new options before existing ones
+  // Prepend new options before existing ones
   const optionsContainer = document.querySelector('.management-options-container');
   optionsContainer.prepend(document.getElementById('manageLinks'));
   optionsContainer.prepend(document.getElementById('manageExhibitions'));
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
   optionsContainer.prepend(manageCategoriesBtn);
     
 
-  / Έλεγχος σύνδεσης χρήστη κατά τη φόρτωση
+  // Έλεγχος σύνδεσης χρήστη κατά τη φόρτωση
   if (isLoggedIn()) {
     loginFormContainer.classList.add('hidden');
     loggedInContainer.classList.remove('hidden');
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     managementMenu.classList.remove('visible');
   }
 
-  / Διαχείριση υποβολής σύνδεσης
+  // Διαχείριση υποβολής σύνδεσης
   const loginForm = document.getElementById('loginForm');
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  / Διαχείριση αποσύνδεσης
+  // Διαχείριση αποσύνδεσης
   const logoutButton = document.getElementById('logoutButton');
   logoutButton.addEventListener('click', () => {
     logout();
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     managementMenu.classList.remove('visible');
   });
 
-  / Πλοήγηση στο μενού
+  // Πλοήγηση στο μενού
   const navLinks = document.querySelectorAll('nav a');
   const asideSections = document.querySelectorAll('aside > div');
   const mainContent = document.getElementById('content');
@@ -153,12 +153,12 @@ document.addEventListener('DOMContentLoaded', () => {
   navLinks.forEach(link => { link.addEventListener('click', event => { event.preventDefault(); const a = event.currentTarget; const section = a.dataset.section; navLinks.forEach(l=>l.classList.remove('active')); a.classList.add('active');
       try { localStorage.setItem('activeSection', section); } catch(_) {}
 
-      / Εμφάνιση του σωστού περιεχομένου στο Aside
+      // Εμφάνιση του σωστού περιεχομένου στο Aside
       asideSections.forEach(aside => aside.classList.add('hidden'));
       const asideToShow = document.getElementById(`aside-${section}`);
       if (asideToShow) asideToShow.classList.remove('hidden');
 
-      / Ενημέρωση του Main
+      // Ενημέρωση του Main
       switch (section) {
         case 'biography':
           mainContent.innerHTML = '<p>Επιλέξτε κατηγορία βιογραφίας απο το πλευρικό μενού.</p>';
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  / Διαχείριση κατηγοριών στο Aside
+  // Διαχείριση κατηγοριών στο Aside
   const asideLinks = document.querySelectorAll('aside a');
   asideLinks.forEach(link => {
     link.addEventListener('click', event => {
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const category = event.target.dataset.category;
       const section = event.target.closest('div').id.replace('aside-', '');
 
-      / Ενημέρωση περιεχομένου με βάση την κατηγορία
+      // Ενημέρωση περιεχομένου με βάση την κατηγορία
       if (section === 'biography') {
         mainContent.innerHTML = biographyContent[category] || '<p>Το περιεχόμενο δεν είναι διαθέσιμο.</p>';
       } else if (section === 'paintings') {
@@ -250,13 +250,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  / Διαχείριση εκθέσεων
+  // Διαχείριση εκθέσεων
   const manageExhibitions = document.getElementById('manageExhibitions');
 manageExhibitions.addEventListener('click', async (e) => { e.preventDefault(); await renderExhibitionsAdmin(); });
-/ Διαχείριση συνδέσμων
+// Διαχείριση συνδέσμων
   const manageLinks = document.getElementById('manageLinks');
 manageLinks.addEventListener('click', async (e) => { e.preventDefault(); await renderLinksAdmin(); });
-  / --- Startup: load sidebars and select default section ---
+  // --- Startup: load sidebars and select default section ---
   (async () => {
     try { await loadAsideMenus(); } catch (e) { console.error('Failed to load aside menus on startup', e); }
     let target = null;
@@ -268,7 +268,7 @@ manageLinks.addEventListener('click', async (e) => { e.preventDefault(); await r
 
 });
 
-/ Τροποποίηση της loadExhibitions()
+// Τροποποίηση της loadExhibitions()
 async function loadExhibitions() {
   try {
     const token = localStorage.getItem('token');
@@ -419,13 +419,13 @@ async function loadLinksByCategory(category) {
 }
 
 
-/ --- Helpers to render admin pages ---
+// --- Helpers to render admin pages ---
 
 
 
-/ Hook up buttons when logged in UI shows
+// Hook up buttons when logged in UI shows
 
-/ Hook up buttons when logged in UI shows (use closest to capture clicks on inner elements)
+// Hook up buttons when logged in UI shows (use closest to capture clicks on inner elements)
 document.addEventListener('click', (e) => {
   const catEl = e.target.closest('a#manageCategories');
   if (catEl) { e.preventDefault(); renderCategoriesAdmin(); return; }
@@ -451,7 +451,7 @@ document.addEventListener('click', (e) => {
 
 
 
-/ ΜΟΝΟ Υποκατηγορίες: οι κατηγορίες είναι σταθερές (π.χ. Βιογραφία, Πίνακες)
+// ΜΟΝΟ Υποκατηγορίες: οι κατηγορίες είναι σταθερές (π.χ. Βιογραφία, Πίνακες)
 
 
 
@@ -523,7 +523,7 @@ async function resolveSubcategory(catKey, token) {
   const cat = cats.find(c => c.key === catKey);
   if (!cat) return null;
   const subs = await fetchSubcategories(cat._id);
-  / Try key match first, then case-insensitive name match
+  // Try key match first, then case-insensitive name match
   let sub = subs.find(s => s.key === token);
   if (!sub) sub = subs.find(s => (s.name || '').toLowerCase() === (token||'').toLowerCase());
   return sub || null;
@@ -537,19 +537,19 @@ async function renderBiographyPublic(token) {
   const data = await getBiography(sub._id);
 
   function renderFromPlain(rawText){
-    const norm = String(rawText || '').replace(/\r\n/g, '\n');                / normalize CRLF
-    / Escape minimal HTML if it's plain text
+    const norm = String(rawText || '').replace(/\r\n/g, '\n');               
+    // Escape minimal HTML if it's plain text
     const looksLikeHtml = /<\s*(p|br|ul|ol|li|strong|em|h\d)\b/i.test(norm);
-    if (looksLikeHtml) return norm;                                              / already HTML, trust it
+    if (looksLikeHtml) return norm;                                            
     const esc = norm.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
-    / Keep empty lines: split on 2+ newlines -> paragraphs; single newline -> <br>
+    // Keep empty lines: split on 2+ newlines -> paragraphs; single newline -> <br>
     const paragraphs = esc.split(/\n{2,}/).map(part => part.replace(/\n/g,'<br>'));
     return paragraphs.map(p => `<p>${p}</p>`).join('');
   }
 
   let inner = '';
   if (data && typeof data.contentHtml === 'string') {
-    / If contentHtml doesn't contain tags (i.e., it's plain text), treat it as plain
+    // If contentHtml doesn't contain tags (i.e., it's plain text), treat it as plain
     const hasTags = /<\s*\w+[^>]*>/.test(data.contentHtml);
     inner = hasTags ? data.contentHtml : renderFromPlain(data.contentHtml);
   } else if (data && (data.content || data.text)) {
@@ -807,7 +807,7 @@ async function renderBiographyAdmin() {
 
   
   
-    / If empty, prompt to create a subcategory now
+    // If empty, prompt to create a subcategory now
     if (!subs.length) {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
@@ -877,7 +877,7 @@ async function renderPaintingsAdmin() {
   subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
 
   
-    / If empty, prompt to create a subcategory now
+    // If empty, prompt to create a subcategory now
     if (!subs.length) {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
@@ -1008,7 +1008,7 @@ async function renderExhibitionsAdmin() {
   subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
 
   
-    / If empty, prompt to create a subcategory now
+    // If empty, prompt to create a subcategory now
     if (!subs.length) {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {
@@ -1134,7 +1134,7 @@ async function renderLinksAdmin() {
   subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
 
   
-    / If empty, prompt to create a subcategory now
+    // If empty, prompt to create a subcategory now
     if (!subs.length) {
       showQuickCreateSubModal(cat._id, async (created) => {
         if (created && created._id) {

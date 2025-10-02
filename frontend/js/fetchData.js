@@ -77,7 +77,7 @@ export async function deleteExhibition(id) {
   }
 }
 
-/ Σύνδεσμοι
+// Σύνδεσμοι
 export async function fetchLinks() {
   try {
     const response = await fetch(`/api/links`);
@@ -132,7 +132,7 @@ export async function deleteLink(id) {
 }
 
 
-/ --- New API helpers for Categories/Subcategories/Biography/Paintings ---
+// --- New API helpers for Categories/Subcategories/Biography/Paintings ---
 export async function fetchCategories() {
   const res = await fetch(`/api/categories`);
   if (!res.ok) throw new Error('Failed to fetch categories');
@@ -217,7 +217,7 @@ export async function deletePainting(id) {
 }
 
 
-/ --- Category CRUD (no seed) ---
+// --- Category CRUD (no seed) ---
 export async function addCategory(payload) {
   const res = await fetchWithAuth(`/api/categories`, {
     method: 'POST',
