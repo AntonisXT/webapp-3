@@ -101,3 +101,32 @@ async function fetchWithAuth(url, options = {}) {
 
 // Εξαγωγή λειτουργιών
 export { login, isLoggedIn, logout, fetchWithAuth };
+
+
+export async function login(username, password) {
+  try {
+    const res = await fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return { ok: true, token: data.token };
+    }
+    if (res.status === 400 || res.status === 401) {
+      return { ok: false, message: 'Λάθος στοιχεία.' };
+    }
+    const payload = await res.json().catch(()=>({}));
+    const msg = payload.message || 'Προσωρινό πρόβλημα. Προσπάθησε ξανά.';
+    if (location.hostname === 'localhost') {
+      console.warn('Auth unexpected response:', res.status, msg);
+    }
+    return { ok: false, message: msg };
+  } catch (err) {
+    if (location.hostname === 'localhost') {
+      console.warn('Auth network error:', err);
+    }
+    return { ok: false, message: 'Αποτυχία σύνδεσης στο server.' };
+  }
+}
