@@ -1,5 +1,3 @@
-// auth.js
-
 const API_URL = "";
 
 // -- Helpers: decode/validate JWT on the client --
@@ -16,7 +14,7 @@ function parseJwt(token){
 }
 function isTokenExpired(token){
     const payload = parseJwt(token);
-    if(!payload || !payload.exp) return false; // if no exp, assume valid
+    if(!payload || !payload.exp) return false;
     const nowSec = Math.floor(Date.now()/1000);
     return payload.exp <= nowSec;
 }
@@ -26,25 +24,22 @@ async function login(username, password) {
     try {
         const response = await fetch('/auth/login', {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || "Σφάλμα κατά την είσοδο");
+            const error = await response.json().catch(() => ({}));
+            alert(error.message || "Λάθος στοιχεία σύνδεσης");
+            return;
         }
 
         const data = await response.json();
-        // Αποθήκευση του JWT στο localStorage
         localStorage.setItem("token", data.token);
-        //alert("Επιτυχής σύνδεση!");
-        window.location.href = "index.html"; // Ανακατεύθυνση στην κύρια σελίδα
+        window.location.href = "index.html";
     } catch (error) {
-        console.error("Σφάλμα σύνδεσης:", error.message);
-        alert(error.message);
+        console.error("Απρόσμενο σφάλμα σύνδεσης:", error);
+        alert("Υπήρξε πρόβλημα με το δίκτυο ή τον server");
     }
 }
 
@@ -56,48 +51,61 @@ function isLoggedIn() {
     return true;
 }
 
-// Λήψη του token
 function getToken() {
     return localStorage.getItem("token");
 }
 
-// Αποσύνδεση χρήστη
 function logout() {
     localStorage.removeItem("token");
-    //alert("Έχετε αποσυνδεθεί!");
+    // εδώ μπορούμε να κάνουμε redirect στο login αν θέλουμε
 }
 
+// fetch με Auth header
 async function fetchWithAuth(url, options = {}) {
     const token = getToken();
     if (!token) {
-      throw new Error('No authentication token found');
+        alert("Δεν έχετε συνδεθεί");
+        throw new Error("No authentication token");
     }
+
     const isFormData = options && options.body instanceof FormData;
     const headers = {
       ...(options.headers || {}),
       'Authorization': `Bearer ${token}`,
       ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     };
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
-    if (!response.ok) {
-      if (response.status === 401) { try { logout(); } catch {} }
-      // try to parse JSON error; if not JSON, fall back to text
-      let message = 'API request failed';
-      try {
-        const err = await response.json();
-        message = err.message || JSON.stringify(err);
-      } catch (e) {
-        try {
-          message = await response.text();
-        } catch {}
-      }
-      throw new Error(message);
+
+    try {
+        const response = await fetch(url, { ...options, headers });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                // Αναμενόμενο: ληγμένο/λάθος token → logout σιωπηρά + μήνυμα
+                try { logout(); } catch {}
+                alert("Η σύνδεση έληξε, παρακαλώ ξανασυνδεθείτε.");
+                return Promise.reject(new Error("Unauthorized"));
+            }
+
+            // Άλλα errors: φιλικό μήνυμα χωρίς console.error
+            let message = 'Το αίτημα απέτυχε';
+            try {
+                const err = await response.json();
+                message = err.message || JSON.stringify(err);
+            } catch {
+                try { message = await response.text(); } catch {}
+            }
+            alert(message);
+            return Promise.reject(new Error(message));
+        }
+
+        return response;
+    } catch (error) {
+        // Απρόσμενο λάθος (δίκτυο κ.λπ.)
+        console.error("Απρόσμενο σφάλμα fetch:", error);
+        alert("Υπήρξε πρόβλημα με το δίκτυο ή τον server");
+        throw error;
     }
-    return response;
 }
 
-// Εξαγωγή λειτουργιών
+// Εξαγωγή
 export { login, isLoggedIn, logout, fetchWithAuth };
