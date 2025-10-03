@@ -824,6 +824,7 @@ async function renderBiographyAdmin() {
   function setBioEnabled(on){ if(editor) editor.disabled = !on; if(saveBtn) saveBtn.disabled = !on; }
   setBioEnabled(!!subSel.value);
 
+subSel.addEventListener('change', () => { setBioEnabled(!!subSel.value); });
   async function loadBio() {
     if (!subSel || !subSel.value) { editor.value = ''; return; }
 
@@ -908,6 +909,7 @@ async function renderPaintingsAdmin() {
 
   function setPaintEnabled(on){ if(filesEl) filesEl.disabled = !on; if(uploadBtn) uploadBtn.disabled = !on; }
   setPaintEnabled(!!subSel.value);
+subSel.addEventListener('change', () => { setPaintEnabled(!!subSel.value); });
   async function loadGallery(){ if (!subSel || !subSel.value) { gal.innerHTML = '<p>Δεν υπάρχουν υποκατηγορίες.</p>'; return; }
     const items = await listPaintings(subSel.value);
     gal.innerHTML = items.length ? items.map(i => `
@@ -1006,7 +1008,6 @@ async function renderExhibitionsAdmin() {
   const cat = cats.find(c => c.key === 'exhibitions');
   const subSel = document.getElementById('exhSubSel');
   if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Εκθέσεις</option>`; return; }
-__enableAllFormFieldsInAdmin();
   const subs = await fetchSubcategories(cat._id);
   subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
 
@@ -1049,6 +1050,7 @@ __enableAllFormFieldsInAdmin();
       </tr>
     `).join('');
   }
+  subSel.addEventListener('change', () => { setExhEnabled(!!subSel.value); });
   subSel.addEventListener('change', loadExh);
   await loadExh();
 
@@ -1133,7 +1135,6 @@ async function renderLinksAdmin() {
   const cat = cats.find(c => c.key === 'links');
   const subSel = document.getElementById('linkSubSel');
   if (!cat) { subSel.innerHTML = `<option>Δεν υπάρχει κατηγορία Συνδέσμων</option>`; return; }
-__enableAllFormFieldsInAdmin();
   const subs = await fetchSubcategories(cat._id);
   subSel.innerHTML = subs.length ? subs.map(s => `<option value="${s._id}">${s.name}</option>`).join('') : `<option value="" disabled selected>— καμία —</option>`;
 
@@ -1174,6 +1175,7 @@ __enableAllFormFieldsInAdmin();
       </tr>
     `).join('');
   }
+  subSel.addEventListener('change', () => { setLinkEnabled(!!subSel.value); });
   subSel.addEventListener('change', loadList);
   await loadList();
 
@@ -1213,26 +1215,3 @@ document.addEventListener('click', (e) => {
   document.querySelectorAll('#bioList a, #paintList a, #exhList a, #linkList a').forEach(x=>x.classList.remove('active'));
   a.classList.add('active');
 });
-// --- Robust cleanup after subcategory overlay ---
-function __cleanupAfterSubcategoryOverlay() {
-  try {
-    document.querySelectorAll('.overlay, .modal-backdrop, .backdrop, .dialog-backdrop').forEach(el => el.remove());
-    document.querySelectorAll('input, textarea, select, button').forEach(el => {
-      try { el.disabled = false; } catch {}
-      try { el.removeAttribute('aria-hidden'); } catch {}
-      try { el.removeAttribute('inert'); } catch {}
-      try { el.style.pointerEvents = ''; } catch {}
-      try { el.style.userSelect = ''; } catch {}
-    });
-    document.body.classList.remove('no-scroll', 'modal-open', 'overlay-open');
-    document.body.style.pointerEvents = '';
-  } catch {}
-}
-
-function __enableAllFormFieldsInAdmin() {
-  const scope = document.querySelector('#admin, #exhibitions-admin, #links-admin, main') || document;
-  scope.querySelectorAll('input, textarea, select, button').forEach(el => {
-    try { el.disabled = false; } catch {}
-    try { el.style.pointerEvents = ''; } catch {}
-  });
-}
